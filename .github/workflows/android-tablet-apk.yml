@@ -1,0 +1,47 @@
+name: Android Tablet APK — Beta
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-tablet-apk.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  android-apk:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+      - name: Build APK (development-signed beta)
+        run: gradle --no-daemon --project-dir android :app:assembleDebug
+      - name: Validate APK exists
+        run: |
+          test -s android/app/build/outputs/apk/debug/app-debug.apk
+          mkdir -p android-output
+          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.1.0.apk
+          sha256sum android-output/KeyboardHeroes-Android-v0.1.0.apk
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KeyboardHeroes-Android-v0.1.0
+          path: android-output/KeyboardHeroes-Android-v0.1.0.apk
+      - name: Publish Android APK (do not overwrite tag assets)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view android-v0.1.0 >/dev/null 2>&1; then
+            gh release view android-v0.1.0 --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.1.0.apk'
+          else
+            gh release create android-v0.1.0 android-output/KeyboardHeroes-Android-v0.1.0.apk \
+              --title 'Keyboard Heroes Android Tablet v0.1.0 (Beta)' \
+              --notes-file android/RELEASE.md --target main
+          fi
