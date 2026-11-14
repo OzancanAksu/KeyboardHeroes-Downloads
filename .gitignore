@@ -1,0 +1,9 @@
+# Never commit any Android/Windows signing private keys.
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pfx
+**/*.pem
+android/.gradle/
+android/build/
+android/app/build/
