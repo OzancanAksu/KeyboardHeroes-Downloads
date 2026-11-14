@@ -8,7 +8,7 @@ Independent **Android Studio / Gradle** source project. Gameplay stays on the of
 - Only HTTPS keyboardheroes.com.tr is loaded internally; external links open the system browser.
 - JS bridge accepts an allowlisted set of launcher commands; no file access or cleartext networking.
 - Run locally: open this directory in Android Studio and build `app:assembleDebug`.
-- CI: `.github/workflows/android-tablet-apk.yml` publishes an **installable debug-signed beta** artifact under `android-v0.5.0`.
+- CI: `.github/workflows/android-tablet-apk.yml` publishes an **installable debug-signed beta** artifact under `android-v0.6.0`. Production signing and release-key setup: [`android/SIGNING.md`](SIGNING.md).
 
 **Important:** Android debug signing keys are not appropriate for a production release. For store distribution and seamless future APK upgrades, configure a persistent private release keystore in encrypted CI secrets, switch to `assembleRelease` with that keystore, and increment `versionCode`. Different debug signing keys prevent direct installation over an older APK. APK install may require Android's 'Install unknown apps' permission.
 
@@ -57,3 +57,6 @@ Android source is isolated under `android/` in the existing KeyboardHeroes-Downl
 - Armağan Koridorları' connected large maze produces one randomly located gift every 20 seconds (max 3); automatic proximity pickup grants heal, power, armor or speed until death.
 - Shared Windows/Android server-authoritative mechanics; debug-signed APK versionCode 7. No additional permissions or paid services.
 - Continues to use the original KH gold shield Android launcher icon and the touch-aim optimizations from v0.5.x.
+
+## Persistent signing and trusted distribution
+The v0.6.0 APK is a debug-signed beta and must not be described as publisher verified. A **separate, manually triggered** `android-production-signing.yml` workflow creates the v0.6.1 release only when the owner has provisioned an offline-backed, persistent signing keystore in encrypted GitHub secrets. It fails before publishing if credentials are absent; its APK signature is verified with `apksigner` and a public SHA-256 file is attached. Read [SIGNING.md](SIGNING.md) for safe local generation, encrypted secret setup, and the Android Developer Verification steps. Never commit or share the keystore/private key.
