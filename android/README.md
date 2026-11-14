@@ -45,8 +45,15 @@ Android source is isolated under `android/` in the existing KeyboardHeroes-Downl
 - Existing phone movement, enlarged potions and 60 FPS paint throttle retained.
 - Note: This is a debug-signed beta APK; uninstall a previous Android beta if Android reports a signing incompatibility when updating.
 
-## v0.5.1 — official Keyboard Heroes KH app icon
+## v0.6.0 — official Keyboard Heroes KH app icon
 - Replaces Android's generic default launcher icon with the new original gold KH shield and crossed swords emblem.
 - Android 8+ adaptive icon with safe inset, dark teal backing, and round/standard launcher mask support.
 - Uses a compact optimized original-art WebP resource for minimal APK size; no runtime image download or external icon service.
-- App version bumped to 0.5.1 (versionCode 6); all v0.5.0 touch and inventory fixes remain unchanged.
+- App version bumped to 0.6.0 (versionCode 6); all v0.5.0 touch and inventory fixes remain unchanged.
+
+## v0.6.0 — Deathmatch + Armağan hybrid mode
+- Choose the ⚔️🎁 Ölüm Maçı + Armağan option in the bot match or online game-type picker.
+- FFA deathmatch with 8 fighters, 7-second safe respawns, individual kill ranking, 20-kill default/adjustable match goal.
+- Armağan Koridorları' connected large maze produces one randomly located gift every 20 seconds (max 3); automatic proximity pickup grants heal, power, armor or speed until death.
+- Shared Windows/Android server-authoritative mechanics; debug-signed APK versionCode 7. No additional permissions or paid services.
+- Continues to use the original KH gold shield Android launcher icon and the touch-aim optimizations from v0.5.x.
