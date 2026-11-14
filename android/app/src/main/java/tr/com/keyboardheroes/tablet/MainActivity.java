@@ -82,11 +82,11 @@ public final class MainActivity extends Activity {
                 if ("/play".equals(path)) {
                     inGame = true;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                    setImmersive(true);
+                    applyImmersive(true);
                 } else if ("/android-launcher".equals(path) || "/android-launcher.html".equals(path)) {
                     inGame = false;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                    setImmersive(false);
+                    applyImmersive(false);
                     launcherReady();
                 }
             }
@@ -120,7 +120,7 @@ public final class MainActivity extends Activity {
                 + "})()", null);
     }
 
-    private void setImmersive(boolean enabled) {
+    private void applyImmersive(boolean enabled) {
         if (enabled) {
             getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
@@ -133,7 +133,7 @@ public final class MainActivity extends Activity {
 
     private void openLauncher() {
         inGame = false;
-        setImmersive(false);
+        applyImmersive(false);
         browser.loadUrl(LAUNCHER);
     }
 
@@ -174,7 +174,7 @@ public final class MainActivity extends Activity {
     }
     @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        setImmersive(inGame);
+        applyImmersive(inGame);
     }
     @Override protected void onSaveInstanceState(Bundle bundle) {
         browser.saveState(bundle);
