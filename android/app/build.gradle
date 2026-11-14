@@ -1,4 +1,19 @@
 plugins { id 'com.android.application' }
+
+// The public beta still uses assembleDebug. Production APKs MUST be signed
+// with the same private, persistent keystore on every build. Never generate
+// new signing keys on CI or put a private keystore into source control.
+def khKeyStorePath = System.getenv('KH_ANDROID_KEYSTORE_PATH')
+def khKeyStorePassword = System.getenv('KH_ANDROID_KEYSTORE_PASSWORD')
+def khSigningAlias = 'keyboardheroes'
+def khReleaseTasks = gradle.startParameter.taskNames.any {
+  it.toLowerCase(java.util.Locale.ROOT).contains('release')
+}
+if (khReleaseTasks && (!khKeyStorePath || !khKeyStorePassword ||
+    !new File(khKeyStorePath).isFile())) {
+  throw new GradleException('Production APK signing requires an existing persistent keystore and KH_ANDROID_KEYSTORE_PASSWORD; refusing to produce an unsigned release.')
+}
+
 android {
  namespace 'tr.com.keyboardheroes.tablet'
  compileSdk 35
@@ -6,11 +21,25 @@ android {
   applicationId 'tr.com.keyboardheroes.tablet'
   minSdk 26
   targetSdk 35
-  versionCode 7
-  versionName '0.6.0'
+  versionCode (System.getenv('KH_ANDROID_VERSION_CODE') ?: '7').toInteger()
+  versionName (System.getenv('KH_ANDROID_VERSION_NAME') ?: '0.6.0')
+ }
+ signingConfigs {
+  release {
+   if (khKeyStorePath && khKeyStorePassword) {
+    storeFile file(khKeyStorePath)
+    storePassword khKeyStorePassword
+    keyAlias khSigningAlias
+    keyPassword khKeyStorePassword // PKCS12 uses one key-store password.
+    storeType 'pkcs12'
+   }
+  }
  }
  buildTypes {
-  release { minifyEnabled false }
+  release {
+   minifyEnabled false
+   signingConfig signingConfigs.release
+  }
  }
  compileOptions {
   sourceCompatibility JavaVersion.VERSION_17
