@@ -78,4 +78,4 @@ jobs:
             android-output/KeyboardHeroes-Android-v0.6.1.apk \
             android-output/SHA256SUMS.txt \
             --title 'Keyboard Heroes Android v0.6.1 — Permanently Signed APK' \
-            --notes-file android/SIGNING.md --target main
+            --notes-file android/SIGNED_RELEASE_NOTES.md --target main
