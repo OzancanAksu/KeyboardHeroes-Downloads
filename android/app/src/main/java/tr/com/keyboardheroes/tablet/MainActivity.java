@@ -25,10 +25,11 @@ import android.widget.Toast;
 public final class MainActivity extends Activity {
     private static final String BASE = "https://keyboardheroes.com.tr";
     private static final String HOST = "keyboardheroes.com.tr";
-    private static final String APP_VERSION = "0.1.0";
+    private static final String APP_VERSION = "0.2.0";
     private static final String LAUNCHER = BASE + "/android-launcher";
     private WebView browser;
     private boolean inGame;
+    private boolean inCombat;
 
     private static boolean isTrusted(Uri uri) {
         return uri != null && "https".equalsIgnoreCase(uri.getScheme())
@@ -81,10 +82,14 @@ public final class MainActivity extends Activity {
                 String path = uri.getPath();
                 if ("/play".equals(path)) {
                     inGame = true;
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                    applyImmersive(true);
+                    inCombat = false;
+                    // Phone and tablet menus must remain naturally oriented and
+                    // scrollable. Combat alone requests landscape fullscreen.
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    applyImmersive(false);
                 } else if ("/android-launcher".equals(path) || "/android-launcher.html".equals(path)) {
                     inGame = false;
+                    inCombat = false;
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     applyImmersive(false);
                     launcherReady();
@@ -116,7 +121,7 @@ public final class MainActivity extends Activity {
     private void launcherReady() {
         browser.evaluateJavascript("(function(){"
                 + "if(window.khLauncher){window.khLauncher.setNativeVersion('"+APP_VERSION+"');"
-                + "window.khLauncher.setUpdate('ready',100,'Android tablet sürümü hazır · oyun verileri sunucudan yüklenir');}"
+                + "window.khLauncher.setUpdate('ready',100,'Android telefon/tablet sürümü hazır · oyun verileri sunucudan yüklenir');}"
                 + "})()", null);
     }
 
@@ -133,6 +138,8 @@ public final class MainActivity extends Activity {
 
     private void openLauncher() {
         inGame = false;
+        inCombat = false;
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         applyImmersive(false);
         browser.loadUrl(LAUNCHER);
     }
@@ -152,6 +159,18 @@ public final class MainActivity extends Activity {
                     if ("/android-launcher".equals(path)) launcherReady();
                 } else if ("launcher-play".equals(value)) {
                     if ("/android-launcher".equals(path)) launchGame();
+                } else if ("game-landscape".equals(value)) {
+                    if ("/play".equals(path) && !inCombat) {
+                        inCombat = true;
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                        applyImmersive(true);
+                    }
+                } else if ("game-menu".equals(value)) {
+                    if ("/play".equals(path) && inCombat) {
+                        inCombat = false;
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                        applyImmersive(false);
+                    }
                 } else if ("back-to-launcher".equals(value)) {
                     if ("/play".equals(path)) confirmExit();
                 }
@@ -174,7 +193,7 @@ public final class MainActivity extends Activity {
     }
     @Override public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        applyImmersive(inGame);
+        applyImmersive(inCombat);
     }
     @Override protected void onSaveInstanceState(Bundle bundle) {
         browser.saveState(bundle);
