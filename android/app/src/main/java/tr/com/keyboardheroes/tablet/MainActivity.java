@@ -25,7 +25,7 @@ import android.widget.Toast;
 public final class MainActivity extends Activity {
     private static final String BASE = "https://keyboardheroes.com.tr";
     private static final String HOST = "keyboardheroes.com.tr";
-    private static final String APP_VERSION = "0.4.0";
+    private static final String APP_VERSION = "0.5.0";
     private static final String LAUNCHER = BASE + "/android-launcher";
     private WebView browser;
     private boolean inGame;
