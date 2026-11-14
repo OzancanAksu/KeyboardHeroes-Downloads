@@ -44,3 +44,9 @@ Android source is isolated under `android/` in the existing KeyboardHeroes-Downl
 - Short tap Q/W/E/R retains nearest-enemy auto-cast. Hold for 160ms or drag >14px to preview in-world range, trajectory and area-of-effect. Release to fire; canceled touches do not cast.
 - Existing phone movement, enlarged potions and 60 FPS paint throttle retained.
 - Note: This is a debug-signed beta APK; uninstall a previous Android beta if Android reports a signing incompatibility when updating.
+
+## v0.5.1 — official Keyboard Heroes KH app icon
+- Replaces Android's generic default launcher icon with the new original gold KH shield and crossed swords emblem.
+- Android 8+ adaptive icon with safe inset, dark teal backing, and round/standard launcher mask support.
+- Uses a compact optimized original-art WebP resource for minimal APK size; no runtime image download or external icon service.
+- App version bumped to 0.5.1 (versionCode 6); all v0.5.0 touch and inventory fixes remain unchanged.
