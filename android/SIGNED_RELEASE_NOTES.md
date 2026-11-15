@@ -1,9 +1,9 @@
-# Keyboard Heroes Android v0.6.1 — Persistent Release Signing
+# Keyboard Heroes Android v0.6.2 — Persistently Signed Match Results Hotfix
 
-First APK signed with the developer's **permanent, privately retained signing key** and verified with the official Android SDK `apksigner` tool. The signature allows subsequent updates with the same signing certificate without uninstalling the app.
+The first persistent-key release on this version is built ONLY when the project owner has configured the original permanent signing keystore as encrypted GitHub Actions secrets. The build verifies its APK signature with Android SDK apksigner and attaches a SHA-256 digest.
 
-Gameplay and `tr.com.keyboardheroes.tablet` package identity are unchanged from v0.6.0, including Deathmatch + Armağan, the KH shield icon, swipe-aim skills and mobile UI optimizations.
+New end-of-match controls: Replay / Rematch, Main Menu, and K/D/A/damage/time statistics. The game logic comes from the official keyboardheroes.com.tr server; the server-side match results hotfix must also be deployed. Existing Deathmatch + Armağan, Q/W/E/R drag aiming, potions and original KH app icon remain.
 
-**One-time upgrade note:** The previous debug-signed beta used a different certificate. Uninstall v0.6.0 before installing this version. Keep your game login credentials; server-side account progress remains linked to the account.
+**Upgrade note:** A debug-signed beta generally cannot be upgraded directly to an APK signed with the permanent key. Uninstall the beta first if Android reports a certificate mismatch; account progress stays on the server.
 
-APK signing verifies file origin and integrity, but **does not constitute Google Play Protect approval or verified Android developer registration**. Only install from the official project's release page.
+Cryptographic APK signing validates file origin and integrity. It is **not** equivalent to Google Play Protect approval or government/developer certification.
