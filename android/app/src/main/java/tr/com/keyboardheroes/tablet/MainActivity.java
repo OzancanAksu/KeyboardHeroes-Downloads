@@ -25,7 +25,7 @@ import android.widget.Toast;
 public final class MainActivity extends Activity {
     private static final String BASE = "https://keyboardheroes.com.tr";
     private static final String HOST = "keyboardheroes.com.tr";
-    private static final String APP_VERSION = "0.6.4";
+    private static final String APP_VERSION = "0.6.5";
     private static final String LAUNCHER = BASE + "/android-launcher";
     private WebView browser;
     private ApkUpdater apkUpdater;
@@ -45,6 +45,15 @@ public final class MainActivity extends Activity {
         browser = new WebView(this);
         browser.setBackgroundColor(Color.rgb(18, 36, 44));
         browser.setOverScrollMode(View.OVER_SCROLL_NEVER);
+        // Only invalidate previously cached HTML/JS after an APK upgrade.
+        // Login cookies and server-saved accounts/builds are not erased.
+        android.content.SharedPreferences versions =
+                getSharedPreferences("kh_native_cache_version", MODE_PRIVATE);
+        final boolean nativeVersionChanged = !APP_VERSION.equals(versions.getString("version", ""));
+        if (nativeVersionChanged) {
+            browser.clearCache(true);
+            versions.edit().putString("version", APP_VERSION).apply();
+        }
         setContentView(browser);
 
         WebSettings settings = browser.getSettings();
@@ -114,7 +123,8 @@ public final class MainActivity extends Activity {
                 }
             }
         });
-        if (state != null) {
+        // A restored pre-upgrade WebView snapshot would resurrect obsolete menus.
+        if (state != null && !nativeVersionChanged) {
             browser.restoreState(state);
         } else {
             openLauncher();
@@ -150,12 +160,13 @@ public final class MainActivity extends Activity {
         inCombat = false;
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
         applyImmersive(false);
-        browser.loadUrl(LAUNCHER);
+        browser.loadUrl(LAUNCHER + "?apk=" + APP_VERSION);
     }
 
     private void launchGame() {
         if (inGame) return;
-        browser.loadUrl(BASE + "/play");
+        // Fetch updated competitive/reconnect game entry on each native release.
+        browser.loadUrl(BASE + "/play?apk=" + APP_VERSION);
     }
 
     private final class Commands {
