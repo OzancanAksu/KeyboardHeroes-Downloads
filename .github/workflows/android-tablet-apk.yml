@@ -5,6 +5,11 @@ on:
     paths:
       - 'android/**'
       - '.github/workflows/android-tablet-apk.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-tablet-apk.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -37,20 +42,21 @@ jobs:
         run: |
           test -s android/app/build/outputs/apk/debug/app-debug.apk
           mkdir -p android-output
-          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.2-beta.apk
-          sha256sum android-output/KeyboardHeroes-Android-v0.6.2-beta.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.3-beta.apk
+          sha256sum android-output/KeyboardHeroes-Android-v0.6.3-beta.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v0.6.2-beta
-          path: android-output/KeyboardHeroes-Android-v0.6.2-beta.apk
+          name: KeyboardHeroes-Android-v0.6.3-beta
+          path: android-output/KeyboardHeroes-Android-v0.6.3-beta.apk
       - name: Publish Android APK (do not overwrite tag assets)
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view android-v0.6.2-beta >/dev/null 2>&1; then
-            gh release view android-v0.6.2-beta --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.6.2-beta.apk'
+          if gh release view android-v0.6.3-beta >/dev/null 2>&1; then
+            gh release view android-v0.6.3-beta --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.6.3-beta.apk'
           else
-            gh release create android-v0.6.2-beta android-output/KeyboardHeroes-Android-v0.6.2-beta.apk \
-              --title 'Keyboard Heroes Android Phone & Tablet v0.6.2-beta (Beta)' \
+            gh release create android-v0.6.3-beta android-output/KeyboardHeroes-Android-v0.6.3-beta.apk \
+              --title 'Keyboard Heroes Android Phone & Tablet v0.6.3-beta (Beta)' \
               --notes-file android/RELEASE.md --target main
           fi

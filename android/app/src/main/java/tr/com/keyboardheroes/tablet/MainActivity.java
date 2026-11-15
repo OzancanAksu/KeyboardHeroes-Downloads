@@ -25,9 +25,10 @@ import android.widget.Toast;
 public final class MainActivity extends Activity {
     private static final String BASE = "https://keyboardheroes.com.tr";
     private static final String HOST = "keyboardheroes.com.tr";
-    private static final String APP_VERSION = "0.6.2";
+    private static final String APP_VERSION = "0.6.3";
     private static final String LAUNCHER = BASE + "/android-launcher";
     private WebView browser;
+    private ApkUpdater apkUpdater;
     private boolean inGame;
     private boolean inCombat;
 
@@ -66,6 +67,7 @@ public final class MainActivity extends Activity {
         CookieManager.getInstance().setAcceptThirdPartyCookies(browser, false);
         browser.addJavascriptInterface(new Commands(), "KeyboardHeroesAndroid");
         browser.setWebChromeClient(new WebChromeClient());
+        apkUpdater = new ApkUpdater(this, browser);
         browser.setWebViewClient(new WebViewClient() {
             @Override public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
                 Uri uri = request.getUrl();
@@ -93,6 +95,7 @@ public final class MainActivity extends Activity {
                     setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                     applyImmersive(false);
                     launcherReady();
+                    apkUpdater.checkOnLauncher(false);
                 }
             }
             @Override public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse response) {
@@ -122,6 +125,12 @@ public final class MainActivity extends Activity {
         browser.evaluateJavascript("(function(){"
                 + "if(window.khLauncher){window.khLauncher.setNativeVersion('"+APP_VERSION+"');"
                 + "window.khLauncher.setUpdate('ready',100,'Android telefon/tablet sürümü hazır · oyun verileri sunucudan yüklenir');}"
+                + "var strip=document.querySelector('.update-strip');"
+                + "if(strip&&!document.getElementById('kh-native-update-check')){"
+                + "var btn=document.createElement('button');btn.id='kh-native-update-check';"
+                + "btn.type='button';btn.className='pill';btn.textContent='APK GÜNCELLEMESİNİ KONTROL ET';"
+                + "btn.onclick=function(){window.KeyboardHeroesAndroid.postMessage('launcher-check-update')};"
+                + "strip.appendChild(btn);}"
                 + "})()", null);
     }
 
@@ -157,6 +166,8 @@ public final class MainActivity extends Activity {
                 String path = Uri.parse(browser.getUrl()).getPath();
                 if ("launcher-ready".equals(value) || "launcher-retry".equals(value)) {
                     if ("/android-launcher".equals(path)) launcherReady();
+                } else if ("launcher-check-update".equals(value)) {
+                    if ("/android-launcher".equals(path)) apkUpdater.checkOnLauncher(true);
                 } else if ("launcher-play".equals(value)) {
                     if ("/android-launcher".equals(path)) launchGame();
                 } else if ("game-landscape".equals(value)) {
@@ -199,7 +210,12 @@ public final class MainActivity extends Activity {
         browser.saveState(bundle);
         super.onSaveInstanceState(bundle);
     }
+    @Override protected void onResume() {
+        super.onResume();
+        if (apkUpdater != null) apkUpdater.onResume();
+    }
     @Override protected void onDestroy() {
+        if (apkUpdater != null) apkUpdater.close();
         browser.removeJavascriptInterface("KeyboardHeroesAndroid");
         browser.destroy();
         super.onDestroy();
