@@ -61,7 +61,7 @@ jobs:
           test -s "$source"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs --min-sdk-version 26 "$source"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$source" | tee /tmp/kh-production-badging.txt
-          grep -F "versionCode=\x2718\x27 versionName=\x271.0.1\x27" /tmp/kh-production-badging.txt
+          grep -F "versionCode='18' versionName='1.0.1'" /tmp/kh-production-badging.txt
           mkdir -p android-output
           cp "$source" android-output/KeyboardHeroes-Android-v1.0.1.apk
           (
