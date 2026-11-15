@@ -46,7 +46,7 @@ jobs:
           test -s "$file"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 26 "$file"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$file" | tee /tmp/kh-android-badging.txt
-          grep -E "package: name='tr\.com\.keyboardheroes\.tablet' versionCode='13' versionName='0\.6\.5'" /tmp/kh-android-badging.txt
+          grep -E "package: name='tr\.com\.keyboardheroes\.tablet' versionCode='13' versionName='0\.6\.6'" /tmp/kh-android-badging.txt
       - name: Validate APK exists
         run: |
           test -s android/app/build/outputs/apk/debug/app-debug.apk
