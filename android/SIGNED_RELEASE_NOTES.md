@@ -1,9 +1,6 @@
-# Keyboard Heroes Android v0.6.5 — Release-signed build
+# Keyboard Heroes Android v0.6.6 — FFA Deathmatch Rooms
 
-- Rekabetçi 3v3, 4v4, 5v5; Alan Hâkimiyeti ve Gezen Taht 15 dakika / 1.000 puan; Bayrak Yarışı 7 teslimat.
-- Hesapla doğrulanan 120 saniyelik yeniden bağlanma; aktif maça dönüş; rekabetçi maç terk cezası −2 galibiyet.
-- v0.6.5 Android önbellek yenilemesi ve sürüm kodu 12; aynı sunucudan canlı oyun güncellemeleri.
-- Yeni APK için kalıcı Android özel imza anahtarı gerekir. Sertifika yalnızca mevcut güvenli GitHub Actions secrets alanından alınır.
-- Yayın ancak `apksigner` doğrulaması başarılı olursa yapılır; yayınlanan SHA-256 dosyası APK içeriğini doğrular.
-
-Güvenli yayımlama koşulları sağlanmadıkça production APK üretilemez. Geliştirme imzalı beta paketinin üretim imzası olarak değerlendirilmemesi gerekir.
+- Independent 2–8-player free-for-all lobby for plain Deathmatch and Deathmatch + Gifts; no blue/red teams or team capacity selector.
+- Kill-based victory conditions; existing gift and respawn rules preserved.
+- Android versionCode 13 and cache refresh on upgrade; same live game server as Windows.
+- Permanent release keystore required. APK signature and SHA-256 are verified before publication.

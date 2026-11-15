@@ -32,8 +32,8 @@ jobs:
           chmod 600 "$file"
           keytool -list -keystore "$file" -storetype PKCS12 -storepass "$KH_KEYSTORE_PASSWORD" -alias keyboardheroes >/dev/null
           echo "KH_ANDROID_KEYSTORE_PATH=$file" >> "$GITHUB_ENV"
-          echo "KH_ANDROID_VERSION_NAME=0.6.5" >> "$GITHUB_ENV"
-          echo "KH_ANDROID_VERSION_CODE=12" >> "$GITHUB_ENV"
+          echo "KH_ANDROID_VERSION_NAME=0.6.6" >> "$GITHUB_ENV"
+          echo "KH_ANDROID_VERSION_CODE=13" >> "$GITHUB_ENV"
       - name: Install Android SDK components
         shell: bash
         run: |
@@ -57,14 +57,14 @@ jobs:
           test -s "$source"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs --min-sdk-version 26 "$source"
           mkdir -p android-output
-          cp "$source" android-output/KeyboardHeroes-Android-v0.6.5.apk
+          cp "$source" android-output/KeyboardHeroes-Android-v0.6.6.apk
           (
             cd android-output
-            sha256sum KeyboardHeroes-Android-v0.6.5.apk > SHA256SUMS.txt
+            sha256sum KeyboardHeroes-Android-v0.6.6.apk > SHA256SUMS.txt
           )
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v0.6.5-Signed
+          name: KeyboardHeroes-Android-v0.6.6-Signed
           path: android-output/
       - name: Publish the one-time immutable signed APK release
         shell: bash
@@ -72,12 +72,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view android-v0.6.5 >/dev/null 2>&1; then
-            echo "::error::android-v0.6.5 already exists. Refusing to overwrite a cryptographically signed public release."
+          if gh release view android-v0.6.6 >/dev/null 2>&1; then
+            echo "::error::android-v0.6.6 already exists. Refusing to overwrite a cryptographically signed public release."
             exit 1
           fi
-          gh release create android-v0.6.5 \
-            android-output/KeyboardHeroes-Android-v0.6.5.apk \
+          gh release create android-v0.6.6 \
+            android-output/KeyboardHeroes-Android-v0.6.6.apk \
             android-output/SHA256SUMS.txt \
-            --title 'Keyboard Heroes Android v0.6.5 — Permanently Signed APK' \
+            --title 'Keyboard Heroes Android v0.6.6 — Permanently Signed APK' \
             --notes-file android/SIGNED_RELEASE_NOTES.md --target main
