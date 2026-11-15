@@ -256,7 +256,7 @@ final class ApkUpdater {
             request.setDescription("Doğrulanmış APK güncellemesi indiriliyor");
             request.setMimeType(MIME);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
-            request.setAllowedOverMetered(false); // avoid surprise mobile-data usage
+            request.setAllowedOverMetered(true); // user explicitly approved this download
             request.setDestinationInExternalFilesDir(activity, Environment.DIRECTORY_DOWNLOADS,
                     "keyboardheroes-update-v" + release.version + ".apk");
             downloadId = downloads.enqueue(request);
@@ -264,7 +264,7 @@ final class ApkUpdater {
                     .putString("digest", release.digest)
                     .putString("version", release.version)
                     .putLong("size", release.size).apply();
-            strip("checking", 1, "APK Wi-Fi üzerinden indiriliyor…");
+            strip("checking", 1, "APK indiriliyor…");
             pollDownload();
         } catch (Exception e) {
             strip("error", 0, "APK indirmesi başlatılamadı");
