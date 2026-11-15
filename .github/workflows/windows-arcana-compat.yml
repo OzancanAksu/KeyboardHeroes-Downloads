@@ -1,4 +1,4 @@
-name: Publish Windows v2.5.22 Arcana Compatibility
+name: Publish Windows v2.5.23 Illustrated Equipment
 on:
   push:
     branches: [main]
@@ -16,23 +16,23 @@ jobs:
       - uses: actions/checkout@v4
       - name: Prepare Windows installer and portable archive
         shell: pwsh
-        run: .\windows-publish\publish-v2.5.22.ps1
+        run: .\windows-publish\publish-v2.5.23.ps1
       - name: Publish verified public release (immutable assets)
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference='Stop'
-          gh release view v2.5.22 --repo OzancanAksu/KeyboardHeroes-Downloads 2>$null
+          gh release view v2.5.23 --repo OzancanAksu/KeyboardHeroes-Downloads 2>$null
           if ($LASTEXITCODE -eq 0) {
-            $existing=gh release view v2.5.22 --repo OzancanAksu/KeyboardHeroes-Downloads --json assets | ConvertFrom-Json
+            $existing=gh release view v2.5.23 --repo OzancanAksu/KeyboardHeroes-Downloads --json assets | ConvertFrom-Json
             $names=@($existing.assets | ForEach-Object { $_.name })
-            foreach ($name in @('KeyboardHeroesSetup.exe','KeyboardHeroes-Desktop-v2.5.22.zip')) {
+            foreach ($name in @('KeyboardHeroesSetup.exe','KeyboardHeroes-Desktop-v2.5.23.zip')) {
               if ($names -notcontains $name) { throw "Release exists but is missing $name; refusing to overwrite a pinned release." }
             }
-            Write-Host 'v2.5.22 previously published; preserving SHA-256 pinned assets'
+            Write-Host 'v2.5.23 previously published; preserving SHA-256 pinned assets'
           } else {
-            gh release create v2.5.22 KeyboardHeroesSetup.exe updates/KeyboardHeroes-Desktop-v2.5.22.zip --title "Keyboard Heroes Windows v2.5.22 - Arcana Unified, Flag AI" --notes-file windows-publish/RELEASE-2.5.22.md --repo OzancanAksu/KeyboardHeroes-Downloads --target main
+            gh release create v2.5.23 KeyboardHeroesSetup.exe updates/KeyboardHeroes-Desktop-v2.5.23.zip --title "Keyboard Heroes Windows v2.5.23 - Arcana Unified, Flag AI" --notes-file windows-publish/RELEASE-2.5.23.md --repo OzancanAksu/KeyboardHeroes-Downloads --target main
             if ($LASTEXITCODE -ne 0) { throw 'Failed to publish public release' }
           }
       - name: Verify release metadata and public SHA-256 digests
@@ -41,9 +41,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $ErrorActionPreference='Stop'
-          $release=gh api repos/OzancanAksu/KeyboardHeroes-Downloads/releases/tags/v2.5.22 | ConvertFrom-Json
+          $release=gh api repos/OzancanAksu/KeyboardHeroes-Downloads/releases/tags/v2.5.23 | ConvertFrom-Json
           if ($LASTEXITCODE -ne 0) { throw 'Unable to inspect public release metadata' }
-          foreach ($name in @('KeyboardHeroesSetup.exe','KeyboardHeroes-Desktop-v2.5.22.zip')) {
+          foreach ($name in @('KeyboardHeroesSetup.exe','KeyboardHeroes-Desktop-v2.5.23.zip')) {
             $asset=@($release.assets | Where-Object { $_.name -eq $name }) | Select-Object -First 1
             if (!$asset -or $asset.digest -notmatch '^sha256:[0-9a-fA-F]{64}$' -or $asset.size -lt 2000000) { throw "Missing or invalid asset: $name" }
             $expected=$asset.digest.Substring(7).ToUpperInvariant()
@@ -53,8 +53,8 @@ jobs:
           }
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Windows-v2.5.22
+          name: KeyboardHeroes-Windows-v2.5.23
           path: |
             KeyboardHeroesSetup.exe
-            updates/KeyboardHeroes-Desktop-v2.5.22.zip
+            updates/KeyboardHeroes-Desktop-v2.5.23.zip
           retention-days: 7

@@ -1,8 +1,7 @@
-# Keyboard Heroes Android v0.6.8 Beta — Arcana Unified & Flag AI
+# Keyboard Heroes Android v0.6.9 Beta — Illustrated Arcana Equipment
 
-- Yeni koyu Arcana teması: ana menü, launcher, lobi, maç sonuç ekranı ve envanter aynı görsel dili kullanır.
-- İsimlerine özgü yeni silah işlemeleri ve yumuşak hatlı kıyafet görselleri ortak canlı oyundan yüklenir.
-- Armağan Koridoru / Bayrak Yarışı botları çalınan bayrağı takip eder, düşen bayrağı geri alır ve taşıyıcıyı korumaya çalışır.
-- Yerel Android launcher rengi yeni Arcana paletiyle eşlendi; v0.6.8 yüklenince eski WebView önbelleği temizlenir, hesaplar sunucuda korunur.
-- Native v0.6.8, **versionCode 15**; Android ve Windows çevrimiçi oyun verilerini aynı HTTPS sunucusundan alır.
-- Bu APK geliştirme anahtarıyla imzalanan **beta** sürümüdür; kalıcı yayın anahtarıyla imzalı uygulama gibi sunulmaz. Farklı debug sertifikası önceki beta üzerine kurulumu engellerse önceki uygulamayı kaldırmak gerekebilir.
+- Gerçek envanter görselleri: 8 silah ve 4 kıyafet, koyu Arcana temasıyla eşleşen ayrıntılı özel çizimler.
+- Aynı WebP doku atlası hem Android hem Windows envanterinde ve arena içinde kullanılıyor.
+- v0.6.9 ilk açılışta eski WebView önbelleğini yeniler. Oyun hesapları ve kuşanım kayıtları sunucuda korunur.
+- Yerel Android versiyon kodu 16; oynanış ve multiplayer protokolü değişmedi.
+- APK geliştirme sertifikası ile imzalanmış beta sürümüdür; farklı debug sertifikalı önceki beta üzerine yüklenemiyorsa kaldırıp yeniden kurmak gerekebilir.

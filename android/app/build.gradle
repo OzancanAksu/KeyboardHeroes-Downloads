@@ -21,8 +21,8 @@ android {
   applicationId 'tr.com.keyboardheroes.tablet'
   minSdk 26
   targetSdk 35
-  versionCode = Integer.parseInt(System.getenv('KH_ANDROID_VERSION_CODE') ?: '15')
-  versionName = System.getenv('KH_ANDROID_VERSION_NAME') ?: '0.6.8'
+  versionCode = Integer.parseInt(System.getenv('KH_ANDROID_VERSION_CODE') ?: '16')
+  versionName = System.getenv('KH_ANDROID_VERSION_NAME') ?: '0.6.9'
  }
  signingConfigs {
   release {
