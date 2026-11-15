@@ -1,6 +1,3 @@
-# Keyboard Heroes Android v0.6.10 Beta — Wardrobe Atelier
+# Keyboard Heroes Android 1.0.1 — Stable
 
-- Kıyafetlerde görsel bütünlük: 50 başlık/göğüslük/bot ve 6 pelerin mevcut özgün çizimler ile aynı envanter ve arena sistemi üzerinden gösteriliyor.
-- Dört mevcut atlas kıyafetinin özel illüstrasyonu korunuyor; kalan 52 kıyafet için farklı malzeme, işleme ve motifli çizimler önbelleğe alınıyor.
-- Android WebView sürüm 0.6.10 (versionCode 17) ilk açılışta eski içerik önbelleğini temizler. Oyun verileri, istatistikler, hesap ve multiplayer protokolü 2.2.7 korunur.
-- APK geliştirme anahtarı ile imzalanmış beta sürümüdür. Android imza uyuşmazlığı varsa önce eski beta kaldırılmalıdır.
+This is a production-signing-only release. All equipment visuals are loaded from the official shared game service, with the 56 garments and earlier weapon artwork unified into the Arcana Atelier style. VersionCode 18. Existing debug betas require one-time reinstallation when migrating to the permanent production certificate. No stat or multiplayer protocol changes.

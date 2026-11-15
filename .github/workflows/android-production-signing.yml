@@ -1,7 +1,11 @@
 name: Android Production APK — Persistent Signing Key
 on:
-  # Production signing is deliberately manual. Do not auto-fail every beta
-  # build when owner-managed permanent signing credentials are not configured.
+  push:
+    branches: [main]
+    paths:
+      - 'android/app/**'
+      - 'android/SIGNED_RELEASE_NOTES.md'
+      - '.github/workflows/android-production-signing.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -32,8 +36,8 @@ jobs:
           chmod 600 "$file"
           keytool -list -keystore "$file" -storetype PKCS12 -storepass "$KH_KEYSTORE_PASSWORD" -alias keyboardheroes >/dev/null
           echo "KH_ANDROID_KEYSTORE_PATH=$file" >> "$GITHUB_ENV"
-          echo "KH_ANDROID_VERSION_NAME=0.6.9" >> "$GITHUB_ENV"
-          echo "KH_ANDROID_VERSION_CODE=16" >> "$GITHUB_ENV"
+          echo "KH_ANDROID_VERSION_NAME=1.0.1" >> "$GITHUB_ENV"
+          echo "KH_ANDROID_VERSION_CODE=18" >> "$GITHUB_ENV"
       - name: Install Android SDK components
         shell: bash
         run: |
@@ -56,15 +60,17 @@ jobs:
           source="android/app/build/outputs/apk/release/app-release.apk"
           test -s "$source"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs --min-sdk-version 26 "$source"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$source" | tee /tmp/kh-production-badging.txt
+          grep -F "versionCode=\x2718\x27 versionName=\x271.0.1\x27" /tmp/kh-production-badging.txt
           mkdir -p android-output
-          cp "$source" android-output/KeyboardHeroes-Android-v0.6.9.apk
+          cp "$source" android-output/KeyboardHeroes-Android-v1.0.1.apk
           (
             cd android-output
-            sha256sum KeyboardHeroes-Android-v0.6.9.apk > SHA256SUMS.txt
+            sha256sum KeyboardHeroes-Android-v1.0.1.apk > SHA256SUMS.txt
           )
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v0.6.9-Signed
+          name: KeyboardHeroes-Android-v1.0.1-Signed
           path: android-output/
       - name: Publish the one-time immutable signed APK release
         shell: bash
@@ -72,12 +78,12 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view android-v0.6.9 >/dev/null 2>&1; then
-            echo "::error::android-v0.6.9 already exists. Refusing to overwrite a cryptographically signed public release."
+          if gh release view android-v1.0.1 >/dev/null 2>&1; then
+            echo "::error::android-v1.0.1 already exists. Refusing to overwrite a cryptographically signed public release."
             exit 1
           fi
-          gh release create android-v0.6.9 \
-            android-output/KeyboardHeroes-Android-v0.6.9.apk \
+          gh release create android-v1.0.1 \
+            android-output/KeyboardHeroes-Android-v1.0.1.apk \
             android-output/SHA256SUMS.txt \
-            --title 'Keyboard Heroes Android v0.6.9 — Permanently Signed APK' \
+            --title 'Keyboard Heroes Android v1.0.1 — Permanently Signed APK' \
             --notes-file android/SIGNED_RELEASE_NOTES.md --target main

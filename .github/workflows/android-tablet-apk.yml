@@ -1,20 +1,10 @@
-name: Android Phone & Tablet APK — Beta
+name: Android Debug QA Artifact (no public beta release)
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'android/**'
-      - '.github/workflows/android-tablet-apk.yml'
-  pull_request:
-    branches: [main]
-    paths:
-      - 'android/**'
-      - '.github/workflows/android-tablet-apk.yml'
   workflow_dispatch:
 permissions:
-  contents: write
+  contents: read
 jobs:
-  android-apk:
+  debug-smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -23,11 +13,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - name: Install required Android SDK components
+      - name: Install Android SDK components
         shell: bash
         run: |
-          # GitHub Ubuntu includes SDK command-line tools.
-          # setup-android@v3 attempts to install the obsolete "tools" package.
+          set -euo pipefail
           SDKMANAGER="$(command -v sdkmanager || true)"
           if [ -z "$SDKMANAGER" ]; then SDKMANAGER="$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager"; fi
           test -x "$SDKMANAGER"
@@ -36,36 +25,16 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
-      - name: Build APK (development-signed beta)
+      - name: Build developer-only debug package
         run: gradle --no-daemon --project-dir android :app:assembleDebug
-      - name: Verify Android package metadata, signature and runtime target
+      - name: Validate debug artifact without publishing
         shell: bash
         run: |
           set -euo pipefail
           file="android/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$file"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 26 "$file"
-          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$file" | tee /tmp/kh-android-badging.txt
-          grep -E "package: name='tr\.com\.keyboardheroes\.tablet' versionCode='17' versionName='0\.6\.10'" /tmp/kh-android-badging.txt
-      - name: Validate APK exists
-        run: |
-          test -s android/app/build/outputs/apk/debug/app-debug.apk
-          mkdir -p android-output
-          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.10-beta.apk
-          sha256sum android-output/KeyboardHeroes-Android-v0.6.10-beta.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v0.6.10-beta
-          path: android-output/KeyboardHeroes-Android-v0.6.10-beta.apk
-      - name: Publish Android APK (do not overwrite tag assets)
-        if: github.event_name != 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh release view android-v0.6.10-beta >/dev/null 2>&1; then
-            gh release view android-v0.6.10-beta --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.6.10-beta.apk'
-          else
-            gh release create android-v0.6.10-beta android-output/KeyboardHeroes-Android-v0.6.10-beta.apk \
-              --title 'Keyboard Heroes Android Phone & Tablet v0.6.10-beta (Beta)' \
-              --notes-file android/RELEASE.md --target main
-          fi
+          name: KeyboardHeroes-Android-v1.0.1-Debug-QA-ONLY
+          path: android/app/build/outputs/apk/debug/app-debug.apk

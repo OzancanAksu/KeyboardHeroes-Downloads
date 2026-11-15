@@ -1,6 +1,6 @@
 plugins { id 'com.android.application' }
 
-// The public beta still uses assembleDebug. Production APKs MUST be signed
+// Production APKs MUST be signed
 // with the same private, persistent keystore on every build. Never generate
 // new signing keys on CI or put a private keystore into source control.
 def khKeyStorePath = System.getenv('KH_ANDROID_KEYSTORE_PATH')
@@ -21,8 +21,8 @@ android {
   applicationId 'tr.com.keyboardheroes.tablet'
   minSdk 26
   targetSdk 35
-  versionCode = Integer.parseInt(System.getenv('KH_ANDROID_VERSION_CODE') ?: '17')
-  versionName = System.getenv('KH_ANDROID_VERSION_NAME') ?: '0.6.10'
+  versionCode = Integer.parseInt(System.getenv('KH_ANDROID_VERSION_CODE') ?: '18')
+  versionName = System.getenv('KH_ANDROID_VERSION_NAME') ?: '1.0.1'
  }
  signingConfigs {
   release {

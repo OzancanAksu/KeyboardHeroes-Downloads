@@ -1,7 +1,7 @@
-# Keyboard Heroes Android v0.6.7 — Arcana Arsenal
+# Keyboard Heroes Android 1.0.1 — Stable Production Build
 
-- Corrects double-scaled legacy Q skill damage previews (113 / 171 / 130 / 108 base damage).
-- Android Back now returns from item detail to inventory list, then exits inventory on the next Back press.
-- Premium dark jewel-tone inventory, upgraded weapon presentation and accessible controls, shared with Windows.
-- Android versionCode 14; live HTTPS game content and browser cache refresh on native upgrade.
-- Production APK requires owner-provided long-lived keystore; signing is manual and must be verified before publication.
+- Unifies all 56 old and new outfits in the same original Wardrobe Atelier art direction, including four formerly separate atlas garments.
+- Repaints historical weapons and offhand icons with the jewel-toned Arcana Arsenal finish. Inventory and arena share cached art.
+- Native app version 1.0.1, versionCode 18, Android 8.0+ phone/tablet support. Multiplayer protocol 2.2.7 and account data are unchanged.
+- Built using assembleRelease; publication is refused unless the same owner-managed long-lived PKCS12 signing key is provided through encrypted repository secrets. APK signature and package metadata must verify before publishing.
+- Android's debug-signed 0.6.10 beta normally cannot be upgraded in place to the production signature. Uninstall the beta once, then install the stable APK. Future releases must use the same production certificate.
