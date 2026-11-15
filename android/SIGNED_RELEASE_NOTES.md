@@ -1,6 +1,7 @@
-# Keyboard Heroes Android v0.6.6 — FFA Deathmatch Rooms
+# Keyboard Heroes Android v0.6.7 — Arcana Arsenal
 
-- Independent 2–8-player free-for-all lobby for plain Deathmatch and Deathmatch + Gifts; no blue/red teams or team capacity selector.
-- Kill-based victory conditions; existing gift and respawn rules preserved.
-- Android versionCode 13 and cache refresh on upgrade; same live game server as Windows.
-- Permanent release keystore required. APK signature and SHA-256 are verified before publication.
+- Corrects double-scaled legacy Q skill damage previews (113 / 171 / 130 / 108 base damage).
+- Android Back now returns from item detail to inventory list, then exits inventory on the next Back press.
+- Premium dark jewel-tone inventory, upgraded weapon presentation and accessible controls, shared with Windows.
+- Android versionCode 14; live HTTPS game content and browser cache refresh on native upgrade.
+- Production APK requires owner-provided long-lived keystore; signing is manual and must be verified before publication.
