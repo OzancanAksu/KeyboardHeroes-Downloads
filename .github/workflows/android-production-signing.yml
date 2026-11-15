@@ -60,11 +60,11 @@ jobs:
           cp "$source" android-output/KeyboardHeroes-Android-v0.6.5.apk
           (
             cd android-output
-            sha256sum KeyboardHeroes-Android-v0.6.4.apk > SHA256SUMS.txt
+            sha256sum KeyboardHeroes-Android-v0.6.5.apk > SHA256SUMS.txt
           )
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v0.6.4-Signed
+          name: KeyboardHeroes-Android-v0.6.5-Signed
           path: android-output/
       - name: Publish the one-time immutable signed APK release
         shell: bash
@@ -73,11 +73,11 @@ jobs:
         run: |
           set -euo pipefail
           if gh release view android-v0.6.5 >/dev/null 2>&1; then
-            echo "::error::android-v0.6.4 already exists. Refusing to overwrite a cryptographically signed public release."
+            echo "::error::android-v0.6.5 already exists. Refusing to overwrite a cryptographically signed public release."
             exit 1
           fi
-          gh release create android-v0.6.4 \
-            android-output/KeyboardHeroes-Android-v0.6.4.apk \
+          gh release create android-v0.6.5 \
+            android-output/KeyboardHeroes-Android-v0.6.5.apk \
             android-output/SHA256SUMS.txt \
             --title 'Keyboard Heroes Android v0.6.5 — Permanently Signed APK' \
             --notes-file android/SIGNED_RELEASE_NOTES.md --target main
