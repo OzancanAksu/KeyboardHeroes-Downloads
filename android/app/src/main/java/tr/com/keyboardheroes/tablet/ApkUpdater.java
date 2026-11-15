@@ -98,7 +98,9 @@ final class ApkUpdater {
     private void strip(String state, int percent, String message) {
         if (!onLauncher()) return;
         // JSON quoting also ensures the value cannot execute arbitrary JavaScript.
-        String stateJson = JSONObject.quote(state);
+        // The web launcher uses "ready" as the permission to play. APK checks
+        // are optional and must never block login or launching a game.
+        String stateJson = JSONObject.quote("ready");
         String messageJson = JSONObject.quote(message);
         webView.evaluateJavascript("(function(){if(window.khLauncher)"
                 + "window.khLauncher.setUpdate(" + stateJson + ","
