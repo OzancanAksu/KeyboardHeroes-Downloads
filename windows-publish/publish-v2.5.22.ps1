@@ -50,7 +50,7 @@ foreach ($file in @('KeyboardHeroes.exe','KeyboardHeroesUpdater.exe','server.cjs
 # changed in the single 2.5.21 -> 2.5.22 commit; no private backend is exposed.
 $clientFiles = @(
  'android-launcher.html','arcana-art.js','arcana-unified.css',
- 'desktop.html','home.html','i18n-catalog.js','index.html','launcher.html',
+ 'home.html','i18n-catalog.js','launcher.html',
  'multiplayer-rules.js','portal-arcana.css','version.js','visual-refinement.js'
 )
 foreach ($name in $clientFiles) {
@@ -64,9 +64,29 @@ foreach ($name in $clientFiles) {
     & (Join-Path $stage 'runtime/node.exe') --check $target
     if ($LASTEXITCODE -ne 0) { throw "Invalid JavaScript: $name" }
   }
-  Write-Host "Updated game asset: $name ($(Get-Item $target).Length bytes)"
+  $bytes = (Get-Item -LiteralPath $target).Length
+  Write-Host "Updated game asset: $name ($bytes bytes)"
 }
-$index = Get-Content -LiteralPath (Join-Path $stage 'dist/index.html') -Raw -Encoding UTF8
+# /index.html is intentionally redirected to home.html on the public cloud.
+# Patch the existing verified game entrypoint with the two exact additions
+# from the v2.5.22 commit rather than downloading the wrong HTML document.
+$indexPath = Join-Path $stage 'dist/index.html'
+$index = Get-Content -LiteralPath $indexPath -Raw -Encoding UTF8
+$oldStyle = 'href="inventory-arcana.css"><link rel="icon"'
+$newStyle = 'href="inventory-arcana.css"><link rel="stylesheet" href="arcana-unified.css"><link rel="icon"'
+$oldScript = '<script src="gear-v5-visuals.js"></script>'
+$newScript = '<script src="gear-v5-visuals.js"></script><script src="arcana-art.js"></script>'
+if (!$index.Contains($oldStyle) -or !$index.Contains($oldScript)) { throw 'Unexpected base game entrypoint' }
+$index = $index.Replace($oldStyle, $newStyle).Replace($oldScript, $newScript)
+[System.IO.File]::WriteAllText($indexPath, $index, [System.Text.UTF8Encoding]::new($false))
+# The public cloud also maps /desktop.html to home.html, so preserve the
+# existing locally installed desktop page and add only its new theme link.
+$desktopPath = Join-Path $stage 'dist/desktop.html'
+$desktopSource = Get-Content -LiteralPath $desktopPath -Raw -Encoding UTF8
+$oldDesktop = '<link rel="stylesheet" href="/i18n.css">'
+if (!$desktopSource.Contains($oldDesktop)) { throw 'Unexpected desktop page template' }
+$desktopSource = $desktopSource.Replace($oldDesktop, $oldDesktop + '<link rel="stylesheet" href="/portal-arcana.css">')
+[System.IO.File]::WriteAllText($desktopPath, $desktopSource, [System.Text.UTF8Encoding]::new($false))
 foreach ($asset in @('arcana-unified.css','arcana-art.js')) {
   if (!$index.Contains($asset)) { throw "Missing v2.5.22 asset reference: $asset" }
 }
