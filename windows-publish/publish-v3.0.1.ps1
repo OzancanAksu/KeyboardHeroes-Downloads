@@ -107,8 +107,8 @@ $arsenal=Get-Content -LiteralPath (Join-Path $stage 'dist/arsenal-atelier.js') -
 foreach ($symbol in @('kh-arsenal-art','drawHeldWeapon','drawModularOff','khArsenalArtStatus')) {
  if (!$arsenal.Contains($symbol)) { throw "Missing weapon atelier implementation: $symbol" }
 }
-if (!$atelier.Contains('unifiedLegacyGarments:4')) { throw 'Old atlas garments have not been unified yet' }
 $atelier=Get-Content -LiteralPath (Join-Path $stage 'dist/wardrobe-atelier.js') -Raw -Encoding UTF8
+if (!$atelier.Contains('unifiedLegacyGarments:4')) { throw 'Old atlas garments have not been unified yet' }
 foreach($symbol in @('kh-atelier-art','drawModularArmor','drawModularHead','drawModularBoots','drawModularCape')){
  if (!$atelier.Contains($symbol)) { throw "Wardrobe renderer is missing: $symbol" }
 }
