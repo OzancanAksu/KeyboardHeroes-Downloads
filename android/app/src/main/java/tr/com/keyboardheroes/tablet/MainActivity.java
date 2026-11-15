@@ -25,7 +25,7 @@ import android.widget.Toast;
 public final class MainActivity extends Activity {
     private static final String BASE = "https://keyboardheroes.com.tr";
     private static final String HOST = "keyboardheroes.com.tr";
-    private static final String APP_VERSION = "0.6.7";
+    private static final String APP_VERSION = "0.6.8";
     private static final String LAUNCHER = BASE + "/android-launcher";
     private WebView browser;
     private ApkUpdater apkUpdater;
@@ -40,10 +40,10 @@ public final class MainActivity extends Activity {
 
     @Override public void onCreate(Bundle state) {
         super.onCreate(state);
-        getWindow().setStatusBarColor(Color.rgb(16, 32, 36));
-        getWindow().setNavigationBarColor(Color.rgb(16, 32, 36));
+        getWindow().setStatusBarColor(Color.rgb(18, 23, 39));
+        getWindow().setNavigationBarColor(Color.rgb(18, 23, 39));
         browser = new WebView(this);
-        browser.setBackgroundColor(Color.rgb(18, 36, 44));
+        browser.setBackgroundColor(Color.rgb(18, 23, 39));
         browser.setOverScrollMode(View.OVER_SCROLL_NEVER);
         // Only invalidate previously cached HTML/JS after an APK upgrade.
         // Login cookies and server-saved accounts/builds are not erased.
