@@ -3,7 +3,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'windows-publish/**'
+      - 'windows-publish/publish-v2.5.23.ps1'
+      - 'windows-publish/RELEASE-2.5.23.md'
       - '.github/workflows/windows-arcana-compat.yml'
   workflow_dispatch:
 permissions:
