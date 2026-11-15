@@ -49,7 +49,8 @@ public final class MainActivity extends Activity {
         // Login cookies and server-saved accounts/builds are not erased.
         android.content.SharedPreferences versions =
                 getSharedPreferences("kh_native_cache_version", MODE_PRIVATE);
-        if (!APP_VERSION.equals(versions.getString("version", ""))) {
+        final boolean nativeVersionChanged = !APP_VERSION.equals(versions.getString("version", ""));
+        if (nativeVersionChanged) {
             browser.clearCache(true);
             versions.edit().putString("version", APP_VERSION).apply();
         }
@@ -122,7 +123,8 @@ public final class MainActivity extends Activity {
                 }
             }
         });
-        if (state != null) {
+        // A restored pre-upgrade WebView snapshot would resurrect obsolete menus.
+        if (state != null && !nativeVersionChanged) {
             browser.restoreState(state);
         } else {
             openLauncher();
