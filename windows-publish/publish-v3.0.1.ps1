@@ -142,8 +142,8 @@ if ($LASTEXITCODE -ne 0) { throw 'Server syntax verification failed' }
 
 $packagePath = Join-Path $stage 'package.json'
 $package = Get-Content -LiteralPath $packagePath -Raw -Encoding UTF8
-if ($package -notmatch '"version"\s*:\s*"2\.5\.23"') { throw 'Unexpected npm version in base release' }
-$package = $package -replace '"version"\s*:\s*"2\.5\.23"', '"version": "3.0.1"'
+if ($package -notmatch '"version"\s*:\s*"2\.5\.24"') { throw 'Unexpected npm version in base release' }
+$package = $package -replace '"version"\s*:\s*"2\.5\.24"', '"version": "3.0.1"'
 [System.IO.File]::WriteAllText($packagePath, $package, [System.Text.UTF8Encoding]::new($false))
 
 # Rewrite the managed version literals and assembly metadata using Cecil.
