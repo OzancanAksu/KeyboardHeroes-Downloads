@@ -38,11 +38,20 @@ jobs:
           gradle-version: '8.9'
       - name: Build APK (development-signed beta)
         run: gradle --no-daemon --project-dir android :app:assembleDebug
+      - name: Verify Android package metadata, signature and runtime target
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="android/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$file"
+          "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 26 "$file"
+          "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$file" | tee /tmp/kh-android-badging.txt
+          grep -E "package: name='tr\.com\.keyboardheroes\.tablet' versionCode='12' versionName='0\.6\.5'" /tmp/kh-android-badging.txt
       - name: Validate APK exists
         run: |
           test -s android/app/build/outputs/apk/debug/app-debug.apk
           mkdir -p android-output
-          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.4-beta.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.5-beta.apk
           sha256sum android-output/KeyboardHeroes-Android-v0.6.4-beta.apk
       - uses: actions/upload-artifact@v4
         with:
@@ -53,10 +62,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view android-v0.6.4-beta >/dev/null 2>&1; then
+          if gh release view android-v0.6.5-beta >/dev/null 2>&1; then
             gh release view android-v0.6.4-beta --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.6.4-beta.apk'
           else
             gh release create android-v0.6.4-beta android-output/KeyboardHeroes-Android-v0.6.4-beta.apk \
-              --title 'Keyboard Heroes Android Phone & Tablet v0.6.4-beta (Beta)' \
+              --title 'Keyboard Heroes Android Phone & Tablet v0.6.5-beta (Beta)' \
               --notes-file android/RELEASE.md --target main
           fi
