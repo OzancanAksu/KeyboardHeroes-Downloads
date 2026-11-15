@@ -25,7 +25,7 @@ import android.widget.Toast;
 public final class MainActivity extends Activity {
     private static final String BASE = "https://keyboardheroes.com.tr";
     private static final String HOST = "keyboardheroes.com.tr";
-    private static final String APP_VERSION = "0.6.6";
+    private static final String APP_VERSION = "0.6.7";
     private static final String LAUNCHER = BASE + "/android-launcher";
     private WebView browser;
     private ApkUpdater apkUpdater;
@@ -207,8 +207,22 @@ public final class MainActivity extends Activity {
                 .setPositiveButton("Çık", (dialog, which) -> openLauncher()).show();
     }
     @Override public void onBackPressed() {
-        if (inGame) confirmExit();
-        else new AlertDialog.Builder(this).setTitle("Keyboard Heroes")
+        if (inGame) {
+            // The first system Back press leaves weapon details, the next
+            // closes the inventory. Only if the game cannot handle it do we
+            // show the arena exit confirmation.
+            String current = browser == null ? null : browser.getUrl();
+            if (current != null && isTrusted(Uri.parse(current))) {
+                browser.evaluateJavascript(
+                        "(function(){return !!(window.khAndroidBack&&window.khAndroidBack());})()",
+                        handled -> {
+                            if (!"true".equals(handled) && !isFinishing() && !isDestroyed())
+                                confirmExit();
+                        });
+            } else confirmExit();
+            return;
+        }
+        new AlertDialog.Builder(this).setTitle("Keyboard Heroes")
                 .setMessage("Uygulamadan çıkılsın mı?")
                 .setNegativeButton("İptal", null)
                 .setPositiveButton("Çık", (d, w) -> finish()).show();
