@@ -46,26 +46,26 @@ jobs:
           test -s "$file"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --min-sdk-version 26 "$file"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$file" | tee /tmp/kh-android-badging.txt
-          grep -E "package: name='tr\.com\.keyboardheroes\.tablet' versionCode='16' versionName='0\.6\.9'" /tmp/kh-android-badging.txt
+          grep -E "package: name='tr\.com\.keyboardheroes\.tablet' versionCode='17' versionName='0\.6\.9'" /tmp/kh-android-badging.txt
       - name: Validate APK exists
         run: |
           test -s android/app/build/outputs/apk/debug/app-debug.apk
           mkdir -p android-output
-          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.9-beta.apk
-          sha256sum android-output/KeyboardHeroes-Android-v0.6.9-beta.apk
+          cp android/app/build/outputs/apk/debug/app-debug.apk android-output/KeyboardHeroes-Android-v0.6.10-beta.apk
+          sha256sum android-output/KeyboardHeroes-Android-v0.6.10-beta.apk
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v0.6.9-beta
-          path: android-output/KeyboardHeroes-Android-v0.6.9-beta.apk
+          name: KeyboardHeroes-Android-v0.6.10-beta
+          path: android-output/KeyboardHeroes-Android-v0.6.10-beta.apk
       - name: Publish Android APK (do not overwrite tag assets)
         if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          if gh release view android-v0.6.9-beta >/dev/null 2>&1; then
-            gh release view android-v0.6.9-beta --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.6.9-beta.apk'
+          if gh release view android-v0.6.10-beta >/dev/null 2>&1; then
+            gh release view android-v0.6.10-beta --json assets --jq '.assets[].name' | grep -Fx 'KeyboardHeroes-Android-v0.6.10-beta.apk'
           else
-            gh release create android-v0.6.9-beta android-output/KeyboardHeroes-Android-v0.6.9-beta.apk \
-              --title 'Keyboard Heroes Android Phone & Tablet v0.6.9-beta (Beta)' \
+            gh release create android-v0.6.10-beta android-output/KeyboardHeroes-Android-v0.6.10-beta.apk \
+              --title 'Keyboard Heroes Android Phone & Tablet v0.6.10-beta (Beta)' \
               --notes-file android/RELEASE.md --target main
           fi

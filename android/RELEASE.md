@@ -1,7 +1,6 @@
-# Keyboard Heroes Android v0.6.9 Beta — Illustrated Arcana Equipment
+# Keyboard Heroes Android v0.6.10 Beta — Wardrobe Atelier
 
-- Gerçek envanter görselleri: 8 silah ve 4 kıyafet, koyu Arcana temasıyla eşleşen ayrıntılı özel çizimler.
-- Aynı WebP doku atlası hem Android hem Windows envanterinde ve arena içinde kullanılıyor.
-- v0.6.9 ilk açılışta eski WebView önbelleğini yeniler. Oyun hesapları ve kuşanım kayıtları sunucuda korunur.
-- Yerel Android versiyon kodu 16; oynanış ve multiplayer protokolü değişmedi.
-- APK geliştirme sertifikası ile imzalanmış beta sürümüdür; farklı debug sertifikalı önceki beta üzerine yüklenemiyorsa kaldırıp yeniden kurmak gerekebilir.
+- Kıyafetlerde görsel bütünlük: 50 başlık/göğüslük/bot ve 6 pelerin mevcut özgün çizimler ile aynı envanter ve arena sistemi üzerinden gösteriliyor.
+- Dört mevcut atlas kıyafetinin özel illüstrasyonu korunuyor; kalan 52 kıyafet için farklı malzeme, işleme ve motifli çizimler önbelleğe alınıyor.
+- Android WebView sürüm 0.6.10 (versionCode 17) ilk açılışta eski içerik önbelleğini temizler. Oyun verileri, istatistikler, hesap ve multiplayer protokolü 2.2.7 korunur.
+- APK geliştirme anahtarı ile imzalanmış beta sürümüdür. Android imza uyuşmazlığı varsa önce eski beta kaldırılmalıdır.
