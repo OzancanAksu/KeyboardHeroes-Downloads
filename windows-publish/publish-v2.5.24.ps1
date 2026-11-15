@@ -68,6 +68,15 @@ foreach ($name in $clientFiles) {
   $bytes = (Get-Item -LiteralPath $target).Length
   Write-Host "Updated game asset: $name ($bytes bytes)"
 }
+
+# Package identity must advance even when the live site still advertises the
+# preceding release while CI creates the new immutable artifacts.
+foreach($name in @('version.js','home.html','launcher.html','android-launcher.html')){
+ $full=Join-Path $stage ('dist/'+$name)
+ $content=Get-Content -LiteralPath $full -Raw -Encoding UTF8
+ $content=$content.Replace('2.5.23','2.5.24')
+ [System.IO.File]::WriteAllText($full,$content,[System.Text.UTF8Encoding]::new($false))
+}
 # v2.5.23 already contains the Arcana HTML imports.
 # The live cloud /index.html route is a portal redirect, not the game.
 $index = Get-Content -LiteralPath (Join-Path $stage 'dist/index.html') -Raw -Encoding UTF8
