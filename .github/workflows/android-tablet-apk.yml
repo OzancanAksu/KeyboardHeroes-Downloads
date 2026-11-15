@@ -5,6 +5,11 @@ on:
     paths:
       - 'android/**'
       - '.github/workflows/android-tablet-apk.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'android/**'
+      - '.github/workflows/android-tablet-apk.yml'
   workflow_dispatch:
 permissions:
   contents: write
@@ -44,6 +49,7 @@ jobs:
           name: KeyboardHeroes-Android-v0.6.3-beta
           path: android-output/KeyboardHeroes-Android-v0.6.3-beta.apk
       - name: Publish Android APK (do not overwrite tag assets)
+        if: github.event_name != 'pull_request'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
