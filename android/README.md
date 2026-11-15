@@ -75,3 +75,10 @@ The v0.6.0 APK is a debug-signed beta and must not be described as publisher ver
 - Web gameplay files still update automatically from keyboardheroes.com.tr; only native changes need APK replacement.
 - Debug beta builds use ephemeral certificates and can fail to update over a previous debug APK. A permanent signing key is needed for regular in-place Android upgrades, as documented in SIGNING.md.
 - Native version 0.6.3, versionCode 10. Beta tag android-v0.6.3-beta; production tag android-v0.6.3.
+
+## v0.6.4 — Competitive 4v4 and OXY admin
+- Shared online game offers ranked 4v4 (Domination / Moving Hill) via the same live server for Android and Windows.
+- Separate normal/competitive leaderboards and OXY-only refresh/reset in the public download site.
+- Demo ranking for seven players is labelled DEMO and never counts as real matches.
+- Native shell version 0.6.4, code 11, Android updater remains opt-in and verifies APK SHA-256.
+- Debug beta signing identity is not persistent across CI builds. A one-time uninstall may still be required to install; stable key must be configured for seamless upgrades.
