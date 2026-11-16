@@ -61,7 +61,7 @@ if($LASTEXITCODE -ne 0){throw 'Mono.Cecil restore failed'}
 $dll=Join-Path $nugetDir 'Mono.Cecil/lib/netstandard2.0/Mono.Cecil.dll'
 if(!(Test-Path -LiteralPath $dll)){throw 'Missing Mono.Cecil'}
 Add-Type -Path $dll
-$csc='C:\Windows\Microsoft.NET\Framework64\v4.0.30419\csc.exe'
+$csc='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 if(!(Test-Path -LiteralPath $csc)){throw 'Microsoft .NET Framework compiler missing'}
 $updaterTarget=Join-Path $stage 'KeyboardHeroesUpdater.exe'
 $updaterSource=Join-Path $root 'windows-publish/KeyboardHeroesUpdater-3.0.3.cs'
