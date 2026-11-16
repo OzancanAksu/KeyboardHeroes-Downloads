@@ -73,9 +73,9 @@ if($LASTEXITCODE -ne 0){throw 'Unable to load Mono.Cecil'}
 Add-Type -Path (Join-Path $nugetDir 'Mono.Cecil/lib/netstandard2.0/Mono.Cecil.dll')
 $assembly=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($launcherExe)
 try{
- $class=@($assembly.MainModule.Types | Where-Object {$_.FullName -eq 'KeyboardHeroesDesktop.LauncherWindow'}) | Select-Object -First 1
+ $class=@($assembly.MainModule.Types | Where-Object {$_.FullName -eq 'KeyboardHeroesDesktop.LauncherWindow'})
  if($class.Count -ne 1){throw 'LauncherWindow type missing from compiled EXE'}
- $field=@($class[0].Fields | Where-Object {$_.Name -eq 'Version'}) | Select-Object -First 1
+ $field=@($class[0].Fields | Where-Object {$_.Name -eq 'Version'})
  if($field.Count -ne 1 -or !$field[0].HasConstant -or [string]$field[0].Constant -ne '3.0.6'){
   throw "CRITICAL: compiled native launcher Version constant wrong (found '$($field[0].Constant)')"
  }
@@ -123,7 +123,7 @@ if($LASTEXITCODE -ne 0){throw 'Fresh 3.0.6 setup compilation failed'}
 if([Reflection.AssemblyName]::GetAssemblyName($newSetup).Version.ToString() -ne '3.0.6.0'){throw 'Installer assembly version mismatch'}
 $verify=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($newSetup)
 try{
- $resource=@($verify.MainModule.Resources | Where-Object {$_.Name -eq 'payload'}) | Select-Object -First 1
+ $resource=@($verify.MainModule.Resources | Where-Object {$_.Name -eq 'payload'})
  if($resource.Count -ne 1){throw 'Installer payload missing'}
  $st=$resource[0].GetResourceStream()
  try{
