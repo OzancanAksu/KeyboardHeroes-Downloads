@@ -39,6 +39,7 @@ foreach($path in @('dist/version.js','dist/home.html','dist/launcher.html')){
  [IO.File]::WriteAllText($file,$body.Replace('3.0.6','3.0.7'),[Text.UTF8Encoding]::new($false))
 }
 
+$node=Join-Path $stage 'runtime/node.exe'
 # Overlay the complete changed runtime sources from the tested 3.0.7 branch.
 # All original 3.0.6 package dependencies remain intact. Do NOT use unpinned
 # remote scripts: the resulting ZIP is deterministic for this release input.
