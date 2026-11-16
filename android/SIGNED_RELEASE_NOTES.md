@@ -1,7 +1,8 @@
-# Keyboard Heroes Android 1.0.1 — Stable Production Build
+# Keyboard Heroes Android v1.0.2 — Equipment Balance and No-Flash Canvas Stability
 
-- Unifies all 56 old and new outfits in the same original Wardrobe Atelier art direction, including four formerly separate atlas garments.
-- Repaints historical weapons and offhand icons with the jewel-toned Arcana Arsenal finish. Inventory and arena share cached art.
-- Native app version 1.0.1, versionCode 18, Android 8.0+ phone/tablet support. Multiplayer protocol 2.2.7 and account data are unchanged.
-- Built using assembleRelease; publication is refused unless the same owner-managed long-lived PKCS12 signing key is provided through encrypted repository secrets. APK signature and package metadata must verify before publishing.
-- Android's debug-signed 0.6.10 beta normally cannot be upgraded in place to the production signature. Uninstall the beta once, then install the stable APK. Future releases must use the same production certificate.
+- Android 8.0+ phone/tablet, versionCode 19. Signed with the **same persistent publisher keystore** as v1.0.1.
+- The official HTTPS game client now includes differentiated Burç Sabatonları / Darbe Botları abilities, boot, armor and helmet balancing, and smoother static map caching.
+- A lost Android offscreen GPU bitmap triggers same-frame direct terrain rendering rather than a blank/black frame.
+- Android loads game assets directly from keyboardheroes.com.tr, so the server's v3.0.7 rollout is required for these gameplay features.
+- The native shell retains sign-in, updater checksum validation and touchscreen controls. Protocol remains 2.2.7.
+- APK SHA256SUMS.txt and a cryptographically verified APK are attached. Existing signed v1.0.1 installs can update in-place.
