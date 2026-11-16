@@ -65,7 +65,8 @@ Add-Type -Path $dll
 $csc='C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe'
 if(!(Test-Path -LiteralPath $csc)){throw 'Microsoft .NET Framework compiler missing'}
 $updaterTarget=Join-Path $stage 'KeyboardHeroesUpdater.exe'
-& $csc /nologo /target:winexe /platform:x64 "/out:$updaterTarget" /reference:System.dll /reference:System.Core.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll windows-publish/KeyboardHeroesUpdater-3.0.3.cs
+$updaterSource=Join-Path $root 'windows-publish/KeyboardHeroesUpdater-3.0.3.cs'
+& $csc /nologo /target:winexe /platform:x64 "/out:$updaterTarget" /reference:System.dll /reference:System.Core.dll /reference:System.Drawing.dll /reference:System.Windows.Forms.dll /reference:System.IO.Compression.dll /reference:System.IO.Compression.FileSystem.dll $updaterSource
 if($LASTEXITCODE -ne 0){throw 'Updated Windows updater failed to compile'}
 $verifiedUpdater=[Mono.Cecil.AssemblyDefinition]::ReadAssembly((Join-Path $stage 'KeyboardHeroesUpdater.exe'))
 try{if($verifiedUpdater.Name.Version.ToString() -ne '3.0.3.0'){throw 'Compiled updater version mismatch'}}finally{$verifiedUpdater.Dispose()}
