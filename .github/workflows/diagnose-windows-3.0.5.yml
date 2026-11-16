@@ -30,25 +30,25 @@ jobs:
           Add-Type -Path $dll
           $asm=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($exe)
           try{
-            $matches=New-Object System.Collections.Generic.List[string]
+            $versionItems=New-Object System.Collections.Generic.List[string]
             foreach($type in $asm.MainModule.Types){
               foreach($field in $type.Fields){
                 if($field.HasConstant -and $field.Constant -is [string] -and ($field.Name -match 'Version' -or $field.Constant -match '^\\d+\\.\\d+\\.\\d+$')){
-                  [void]$matches.Add([string]('FIELD '+$type.FullName+'.'+$field.Name+' = '+$field.Constant))
+                  [void]$versionItems.Add([string]('FIELD '+$type.FullName+'.'+$field.Name+' = '+$field.Constant))
                 }
               }
               foreach($method in $type.Methods){
                 if(!$method.HasBody){continue}
                 foreach($ins in $method.Body.Instructions){
                   if($ins.OpCode.Code -eq [Mono.Cecil.Cil.Code]::Ldstr -and $ins.Operand -is [string] -and $ins.Operand -match '^\\d+\\.\\d+\\.\\d+$'){
-                    [void]$matches.Add([string]('IL '+$type.FullName+'.'+$method.Name+' -> '+$ins.Operand))
+                    [void]$versionItems.Add([string]('IL '+$type.FullName+'.'+$method.Name+' -> '+$ins.Operand))
                   }
                 }
               }
             }
-            $matches | ForEach-Object {Write-Host $_}
-            $old=@($matches | Where-Object {$_ -match '2\\.5\\.21'})
+            $versionItems | ForEach-Object {Write-Host $_}
+            $old=@($versionItems | Where-Object {$_ -match '2\\.5\\.21'})
             if($old.Count -gt 0){throw ('BUG FOUND: bundled v3.0.5 executable still has v2.5.21 native string/constant! '+($old -join ' / '))}
-            if(!($matches | Where-Object {$_ -match '3\\.0\\.5'})){throw 'No v3.0.5 native constant found'}
+            if(!($versionItems | Where-Object {$_ -match '3\\.0\\.5'})){throw 'No v3.0.5 native constant found'}
             Write-Host 'PASS: no obsolete 2.5.21 native version constants in public release'
           }finally{$asm.Dispose()}
