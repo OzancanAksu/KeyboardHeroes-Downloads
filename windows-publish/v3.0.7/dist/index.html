@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>KeyboardHeroes — Arena</title>
+<meta name="description" content="Özgün, yetenek tabanlı 1v1–5v5 arena oyunu.">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="i18n.css">
+<link rel="stylesheet" href="equipment.css">
+<link rel="stylesheet" href="targeting.css">
+<link rel="stylesheet" href="spell-catalog.css">
+<link rel="stylesheet" href="catalog-expansion.css">
+<link rel="stylesheet" href="character-card.css">
+<link rel="stylesheet" href="weapon-variants.css">
+<link rel="stylesheet" href="desktop-controls.css">
+<link rel="stylesheet" href="lobby.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="account.css">
+<link rel="stylesheet" href="match-controls.css"><link rel="stylesheet" href="match-results.css">
+<link rel="stylesheet" href="support-role.css">
+<link rel="stylesheet" href="modes.css">
+<link rel="stylesheet" href="warfront.css"><link rel="stylesheet" href="skill-descriptions-v7.css">
+<style>#deathmatch-options{display:flex;align-items:center;gap:12px;padding:12px;margin-bottom:10px;background:#2c4148;border:1px solid #a59978;border-radius:9px;color:#e9ddbd}#deathmatch-target{width:72px;background:#152c35;color:#f0dcaa;border:1px solid #a59978;border-radius:6px;padding:9px;font:inherit}#deathmatch-ranking{white-space:pre-line;position:absolute;z-index:3;top:82px;left:10px;max-width:150px;max-height:230px;overflow:auto;pointer-events:none;padding:10px;background:#273e49;color:#eddbb6;border-left:3px solid #ba9562;font-size:12px;line-height:1.8}.hidden{display:none!important}</style><link rel="stylesheet" href="friendly-draft.css"><link rel="stylesheet" href="inventory.css"><link rel="stylesheet" href="build-arsenal.css"><link rel="stylesheet" href="viewport-fit.css"><link rel="stylesheet" href="bot-lobby.css"><link rel="stylesheet" href="relic-maze.css"><link rel="stylesheet" href="multiplayer.css"><link rel="stylesheet" href="ranked-game.css"><link rel="stylesheet" href="inventory-arcana.css"><link rel="stylesheet" href="arcana-unified.css"><link rel="stylesheet" href="training-room.css"><link rel="icon" href="keyboardheroes.svg" type="image/svg+xml"></head>
+<body>
+<style>html.kh-desktop #account-open,html.kh-desktop #kh-language,html.kh-desktop .download-nav{display:none!important}</style>
+<header><a class="brand" href="./"><span class="sigil">◈</span> KEYBOARDHEROES <small>ARENA</small></a><div class="header-actions"><div class="build"><i></i> Developer: <span>Ozancan Aksu</span></div><a class="download-nav" href="/desktop">MASAÜSTÜNÜ İNDİR <span aria-hidden="true">↓</span></a><button id="account-open" type="button" class="kh-account-button" aria-haspopup="dialog" aria-controls="account-modal" hidden><span class="kh-account-button__emblem"><img src="keyboardheroes.svg" alt="" width="26" height="26"></span><span class="kh-account-button__text"><strong id="account-open-label">OYUNCU GİRİŞİ</strong><small id="account-open-note">Hesabına bağlan</small></span><span class="kh-account-button__arrow" aria-hidden="true">›</span></button></div></header>
+<section class="kh-account-modal" id="account-modal" hidden role="dialog" aria-modal="true" aria-labelledby="account-title" aria-describedby="account-subtitle">
+  <div class="kh-account-card">
+    <div class="kh-account-card__glow" aria-hidden="true"></div>
+    <button id="account-close" class="kh-account-close" type="button" aria-label="Pencereyi kapat">×</button>
+    <div class="kh-account-brand">
+      <img src="keyboardheroes.svg" alt="" width="48" height="48">
+      <div><strong>KEYBOARD<span>HEROES</span></strong><small>ARENA · PLAYER IDENTITY</small></div>
+    </div>
+    <div class="kh-account-divider" aria-hidden="true"><span>◆</span></div>
+    <div class="kh-account-card__content">
+      <p class="kh-account-eyebrow">OYUNCU PORTALI <span aria-hidden="true">/ 01</span></p>
+      <h2 id="account-title">Arenaya geri dön.</h2>
+      <p id="account-subtitle" class="kh-account-description">Kendi adınla sahaya çık. Hesabın, senin imzan.</p>
+      <div id="account-guest-form">
+        <div class="kh-account-tabs" role="tablist" aria-label="Hesap işlemi">
+          <button type="button" id="account-tab-login" role="tab" aria-selected="true">Giriş yap</button>
+          <button type="button" id="account-tab-register" role="tab" aria-selected="false">Kayıt ol</button>
+        </div>
+        <form id="account-form">
+          <label for="account-name">OYUNCU ADI</label>
+          <div class="kh-account-field">
+            <span class="kh-account-field__symbol" aria-hidden="true">◇</span>
+            <input id="account-name" name="username" minlength="3" maxlength="18" pattern="[A-Za-z0-9_]{3,18}" required autocomplete="username" spellcheck="false" placeholder="Oyuncu adın">
+          </div>
+          <label for="account-password">ŞİFRE</label>
+          <div class="kh-account-field">
+            <span class="kh-account-field__symbol" aria-hidden="true">✧</span>
+            <input id="account-password" name="password" type="password" minlength="8" maxlength="128" required autocomplete="current-password" placeholder="Şifreni gir">
+            <button id="account-show-password" class="kh-account-reveal" type="button" aria-label="Şifreyi göster" aria-pressed="false">GÖSTER</button>
+          </div>
+          <button type="submit" id="account-submit" class="kh-account-submit"><span id="account-submit-label">ARENAYA GİR</span><span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="kh-account-footnote"><span aria-hidden="true">✦</span> E-posta gerekmez. Kullanıcı adın ve şifren yeterli.</p>
+        <p class="kh-account-warning">Şifre sıfırlama henüz bulunmuyor. Şifreni güvenli sakla.</p>
+      </div>
+      <div id="account-signed" class="kh-account-signed" hidden>
+        <div class="kh-account-signed__seal" aria-hidden="true">✦</div>
+        <small>BAĞLI OYUNCU <span>● AKTİF</span></small>
+        <p id="account-user-info" hidden></p>
+        <p class="kh-account-signed__note">Kimliğin doğrulandı. Arena seni bekliyor.</p>
+        <button type="button" id="account-logout">HESAPTAN ÇIKIŞ YAP <span aria-hidden="true">↗</span></button>
+      </div>
+      <p id="account-message" role="status" aria-live="polite"></p>
+    </div>
+    <div class="kh-account-bottom"><span>KEYBOARD HEROES</span><span>EST. 2026 · ARENA</span></div>
+  </div>
+</section>
+<main>
+<section class="intro"><div><p class="eyebrow">KADERİNİ SEÇ. ARENAYA HÜKMET.</p><h1>Ustalığını <em>göster.</em></h1></div><p>Ekipmanını seç. Doğru anı bekle.<br>Son darbeyi sen vur.</p></section>
+<div class="layout">
+<aside>
+<div class="section-label bot-home-label">01 <span>ARENA SEÇİMİ</span></div>
+<label class="alias-entry" for="playerAlias"><span>KARAKTER ADIN · ZORUNLU</span><input id="playerAlias" type="text" maxlength="18" required aria-describedby="alias-help" autocomplete="off" spellcheck="false" placeholder="Takma adını yaz"><small id="alias-help">İsim yazmadan maça girilemez.</small></label>
+<button id="start" class="primary">BOT MAÇI OLUŞTUR <span>↗</span></button><button id="training-open" class="training-entry" type="button"><span class="training-entry-symbol">◎</span><span><b>DENEME ODASI</b><small>Build testi · 10.000 CAN · Süresiz</small></span><span aria-hidden="true">↗</span></button>
+<p class="local-note">Bot antrenmanı veya arkadaşlarla çevrimiçi arena</p>
+<div class="network-panel">
+ <h3>ARKADAŞLARINLA OYNA <small>LAN / ÖZEL AĞ / İNTERNET</small></h3>
+ <div class="version-panel"><span id="version-status" role="status">Sürüm kontrol ediliyor…</span><a id="version-download" class="hidden" href="/download" download>YENİ SÜRÜMÜ İNDİR</a></div>
+ <p>1v1–5v5 ve harita boyutunu seç, oda oluştur, kodu arkadaşına gönder. Herkes hazır olunca oda sahibi arenayı başlatır; ekipman için 90 saniye vardır.</p>
+ <div class="network-join" id="public-controls"><input id="public-address" aria-label="Arkadaşın HTTPS oyun adresi" placeholder="https://ev-sahibi.ts.net/" autocomplete="url"><button id="public-connect">İNTERNET ODASINA GİT</button></div>
+ <div class="network-join" id="tailnet-controls"><input id="tailnet-address" aria-label="Arkadaşın Tailscale IP adresi" placeholder="100.x.y.z" maxlength="15" inputmode="decimal" autocomplete="off"><button id="tailnet-connect">ÖZEL AĞA GİT</button></div>
+ <button id="tailnet-home" class="hidden">KENDİ SUNUCUMA DÖN</button><p id="tailnet-location" class="small muted" role="status"></p><button id="copy-share-link" class="hidden" type="button">DAVET LİNKİNİ KOPYALA</button>
+ <button id="network-create">ODA OLUŞTUR</button>
+ <div class="network-join"><input id="network-code" aria-label="Oda kodu" placeholder="8 haneli oda kodu" maxlength="8" autocomplete="off"><button id="network-join">KATIL</button></div>
+ <p id="network-status" role="status">Oyun sunucusu açık olmalı; internet paylaşımı için ev sahibinin bilgisayarı açık kalır.</p>
+ <button id="network-leave" disabled>ODADAN AYRIL</button><button id="network-rematch">RÖVANŞ İSTE</button>
+</div>
+<div class="controls"><h3>KONTROLLER</h3><p><kbd>SAĞ TIK</kbd><span>Yere git / seçimi iptal et</span></p><p><kbd>SOL TIK</kbd><span>Hareket / rakibi kilitle / yeteneği onayla</span></p><p><kbd>OTO ATAK</kbd><span>Hareket ederken menzildeki rakibe kendiliğinden vurur</span></p><p><kbd>Q W E R</kbd><span>Yeteneği seç, sonra sol tıkla</span></p><p><kbd>1 2 3</kbd><span>İksir kullan · Her yuvada 2 kullanım</span></p><p><kbd>S</kbd><span>Dur / kilitli rakibi bırak</span></p><p><kbd>ESC</kbd><span>Seçimi iptal et · yalnız bot maçında mola</span></p></div>
+</aside>
+<section class="game-shell" aria-label="Arena oyunu">
+<div class="arena-top"><div><span class="live-dot"></span> <span id="arena-name">KÜL AVLUSU</span> <small>YIKIK KALE / GÜNDÜZ</small></div><div class="arena-actions"><button id="training-rebuild" class="training-rebuild hidden" type="button" aria-label="Envantere dön ve build değiştir" title="Envantere dön ve build değiştir"><span class="training-rebuild-star" aria-hidden="true">✦</span><span class="training-rebuild-icon" aria-hidden="true"><svg viewBox="0 0 36 36" width="26" height="26" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="10" width="18" height="22" rx="4" fill="#F5DC9D" stroke="#765632" stroke-width="1.6"/><path d="M13 10V8c0-3 2-5 5-5s5 2 5 5v2M9 16h18M15 16v6h6v-6M13 25h10" stroke="#765632" stroke-width="2" stroke-linecap="round"/><rect x="15.5" y="20" width="5" height="5" rx="1" fill="#F8E9C3" stroke="#765632"/></svg></span><span class="training-rebuild-divider" aria-hidden="true"></span><span class="training-rebuild-label">ENVANTERE DÖN</span><span class="training-rebuild-star" aria-hidden="true">✦</span></button><button id="match-exit" class="match-exit hidden" type="button">BOT MAÇINDAN ÇIK</button><button id="fullscreen" type="button" title="Tam ekran (F11)" aria-label="Tam ekrana geç" aria-pressed="false">⛶</button><button id="pause" aria-label="Oyunu duraklat">Ⅱ</button></div></div>
+<div class="viewport"><div id="deathmatch-ranking" class="hidden" aria-label="Deathmatch sıralaması"></div><canvas id="arena" tabindex="0" aria-label="Arena. Sol tık hareket ve rakibi seçme; seçili rakip yere tıklayınca korunur. Q W E R ile yetenek seçip sol tıkla kullan; S ile hedefi bırak."></canvas>
+<div id="party-hud" class="party-hud hidden" role="group" aria-label="Takım can durumları"></div>
+<div class="scoreboard"><span class="blue" id="blueScore">0</span><div><b id="timer">02:00</b><small id="roundLabel">3 GALİBİYETE ULAŞ</small></div><span class="red" id="redScore">0</span></div>
+<div id="banner" class="banner"><span class="eyebrow">KÜL AVLUSUNA HOŞ GELDİN</span><h2>Her hamlenin<br>bir karşılığı var.</h2><p>Bot maçına gir veya çevrimiçi oda oluştur.<br>Arenadan önce ekipmanını seçeceksin.</p><span class="banner-hint">← Bot maçı veya multiplayer odası oluştur</span></div>
+<section id="training-overlay" class="training-overlay hidden" aria-label="Deneme odası hedef bilgileri" role="status" aria-live="off"><div class="training-title"><b>🎯 DENEME HEDEFİ</b><span>10.000 CAN · +50/SN</span></div><div class="training-health"><strong id="training-hp">10.000 / 10.000</strong><small id="training-status">HEDEF HAZIR</small></div><div class="training-track"><i id="training-hp-fill"></i></div><div class="training-metrics"><div><small>SON 5 SN DPS</small><strong id="training-dps">0</strong></div><div><small>TOPLAM HASAR</small><strong id="training-total">0</strong></div><div><small>ÖLDÜRME</small><strong id="training-kills">0</strong></div><div><small>EN YÜKSEK VURUŞ</small><strong id="training-best">0</strong></div></div></section><div id="toast" class="toast" aria-live="polite"></div>
+<div class="legend"><span><i class="blue-bg"></i> SENİN TAKIMIN</span><span><i class="red-bg"></i> RAKİP</span></div>
+</div>
+<div class="combat-hud"><div class="health"><div><b id="playerName">KÖZ KILICI</b><span id="hpText">120 / 120</span></div><div class="health-track"><i id="hpFill"></i></div><small id="wearText" class="wear-text"></small><small id="status">Hazır olduğunda arena seni bekliyor.</small></div><div class="skills" id="skills"></div></div>
+<div class="arena-bottom"><span>Q/W/E/R seç · Sol tıkla kullan · 1/2/3 iksir</span><span>İlk 3 raundu kazanan alır <b>◆</b></span></div>
+</section>
+<aside class="character-card" aria-label="Karakter ve yetenek özeti">
+<div class="character-card-head"><small>KARAKTER KARTI</small><strong id="cardAlias">SEN</strong><span id="cardRole">Köz kılıcı · Düellocu</span></div>
+<div class="character-card-section"><h3>SAVAŞ PROFİLİ</h3><div id="cardStats" class="card-stats"></div></div>
+<div class="character-card-section"><h3>KUŞANILANLAR</h3><div id="cardGear" class="card-gear"></div></div>
+<div class="character-card-section"><h3>YETENEKLER</h3><div id="cardSkills" class="card-skills"></div></div>
+<div class="character-card-section card-passive-section"><h3>PASİF EŞYALAR</h3><div id="cardPassives" class="card-passives"></div></div>
+</aside>
+</div>
+<footer><span>KEYBOARDHEROES <i>/</i> Bağımsız arena deneyimi</span><span id="game-footer-build">Developer: Ozancan Aksu · Oyun sürümü kontrol ediliyor…</span></footer>
+</main><section id="bot-lobby" class="bot-lobby hidden" role="dialog" aria-modal="true" aria-labelledby="bot-lobby-title" aria-describedby="bot-lobby-description">
+ <div class="bot-lobby-card">
+  <header class="bot-lobby-header">
+   <div class="bot-lobby-logo"><img src="keyboardheroes.svg" alt="" width="44" height="44"><div><small>KEYBOARD HEROES · YEREL ANTRENMAN</small><h2 id="bot-lobby-title">BOT SAVAŞ ODASI</h2></div></div>
+   <button type="button" id="bot-lobby-close" aria-label="Bot odasını kapat">×</button>
+  </header>
+  <p id="bot-lobby-description" class="bot-lobby-description">Rakiplerini, savaş türünü ve haritayı seç. Hazır olduğunda arenaya gir.</p>
+  <div class="bot-lobby-layout">
+   <div class="bot-lobby-settings">
+<label class="bot-lobby-alias" for="bot-lobby-alias"><span>OYUNCU ADIN</span><input id="bot-lobby-alias" type="text" maxlength="18" autocomplete="off" spellcheck="false" placeholder="Oyuncu adını gir"></label>
+<div class="bot-lobby-field-title">OYUN TÜRÜ VE TAKIM SAYISI</div>
+<div class="segmented" aria-label="Oyun modu"><button class="selected" data-mode="1">1v1</button><button data-mode="2">2v2</button><button data-mode="3">3v3</button><button data-mode="4">4v4</button><button data-mode="5">5v5</button></div>
+<p class="muted small" id="modeHint">Düello · Bir bot rakip</p>
+<label id="deathmatch-options" class="hidden">Kazanmak için öldürme hedefi <input id="deathmatch-target" type="number" min="1" max="100" step="1" value="20" aria-label="Deathmatch öldürme hedefi"></label><div class="mode-type" aria-label="Maç türü"><button class="selected" data-match-type="vs">VS</button><button data-match-type="capture">KORİDOR SAVAŞI</button><button data-match-type="domination">HÂKİMİYET</button><button data-match-type="skirmish">TAKIM ÇATIŞMASI</button><button data-match-type="hill">GEZEN TAHT</button><button data-match-type="flagRace">FLAG RACE</button><button data-match-type="deathmatch">DEATHMATCH · 2–8</button></div>
+<p class="muted small" id="matchTypeHint">3 raundu ilk kazanan ekip maçı alır.</p>
+<div class="bot-lobby-field-title">HARİTA VE BOYUT</div>
+<div class="segmented map-select" aria-label="Harita boyutu"><button class="selected" data-arena-size="standard">STANDART</button><button data-arena-size="grand">BÜYÜK</button></div>
+<div class="map-layouts" aria-label="Harita seçimi"><button class="selected" data-layout="courtyard">KÜL AVLUSU</button><button data-layout="bridges">TAŞ KÖPRÜ</button><button data-layout="siege">KUŞATMA GEÇİDİ</button><button data-layout="valley">ÜÇ NOKTA VADİSİ</button><button data-layout="ruins">KIRIK MANASTIR</button><button data-layout="quarry">TAŞ OCAĞI</button></div>
+<p class="muted small" id="arenaHint">Standart arena · 1.300 × 1.000 alan · 16 engel</p>
+
+   </div>
+   <aside class="bot-lobby-preview">
+    <div class="bot-lobby-preview-heading"><span>ODA DURUMU</span><strong>● HAZIR</strong></div>
+    <h3 id="bot-lobby-preview-title">1v1 · VS</h3>
+    <p id="bot-lobby-preview-map">KÜL AVLUSU · STANDART</p>
+    <div id="bot-lobby-participants" class="bot-lobby-participants" aria-live="polite"></div>
+    <p class="bot-lobby-footnote">Botlar otomatik katılır. Oda kodu veya başka oyuncu gerekmez.</p>
+   </aside>
+  </div>
+  <p id="bot-lobby-feedback" role="status" aria-live="polite" class="bot-lobby-feedback"></p>
+  <footer class="bot-lobby-actions">
+   <button id="bot-lobby-cancel" type="button">← VAZGEÇ</button>
+   <button id="bot-lobby-start" class="primary" type="button">ARENAYA GİR <span>↗</span></button>
+  </footer>
+ </div>
+</section><section id="online-lobby" class="online-lobby hidden" role="dialog" aria-modal="true" aria-label="Çevrimiçi oda"><div class="lobby-card"><p class="eyebrow">ÇEVRİMİÇİ LOBİ</p><h2 id="lobby-title">Oyuncular bekleniyor</h2><p class="lobby-code-label">BAĞLANTI</p><strong id="lobby-code">────────</strong><p id="lobby-count">0/2 oyuncu</p><div id="lobby-players" class="lobby-players"></div><p id="lobby-hint">Kodu arkadaşlarınla paylaş.</p><button id="lobby-ready" class="lobby-ready" type="button" aria-pressed="false">HAZIRIM</button><button id="lobby-start" class="primary" type="button" disabled>ARENAYA GİR <span>→</span></button><button id="lobby-leave" class="lobby-leave" type="button">ODADAN AYRIL</button></div></section><section id="draft" class="draft hidden" role="dialog" aria-modal="true" aria-label="Raund yetenek ağacı"></section><button id="draft-exit" class="draft-exit hidden" type="button">BOT MAÇINDAN ÇIK</button><div id="draft-timer" class="draft-timer hidden" role="timer" aria-live="off">EKİPMAN SEÇİMİ · 01:30</div>
+<div id="game-cursor" aria-hidden="true"><span class="cursor-ring"></span><span class="cursor-core"></span></div>
+<script src="i18n-en.js"></script><script src="i18n-de.js"></script><script src="i18n-gear.js"></script><script src="i18n-extras.js"></script><script src="i18n-metrics.js"></script><script src="i18n-extended.js"></script><script src="i18n-catalog.js"></script><script src="i18n-v4.js"></script><script src="i18n-v5.js"></script><script src="i18n-relic.js"></script><script src="i18n-balance.js"></script><script src="i18n-dynamic-ui.js"></script><script src="i18n.js"></script>
+<script src="equipment.js"></script>
+<script src="world.js"></script>
+<script src="navigation.js"></script>
+<script src="presentation.js"></script>
+<script src="elemental.js"></script>
+<script src="game.js"></script>
+<script src="loadout.js"></script>
+<script src="accessories.js"></script>
+<script src="weapons.js"></script>
+<script src="combat-feel.js"></script>
+<script src="battle-scale.js"></script>
+<script src="weapon-identity.js"></script>
+<script src="compact-draft.js"></script>
+<script src="targeting.js"></script>
+<script src="spell-catalog.js"></script>
+<script src="catalog-weapons.js"></script>
+<script src="catalog-expansion.js"></script>
+<script src="weapon-variants-core.js"></script>
+<script src="version.js"></script>
+<script src="sync-client.js"></script><script src="online.js"></script><script src="account.js"></script>
+<script src="character-card.js"></script>
+<script src="weapon-art.js"></script>
+<script src="weapon-variants-ui.js"></script>
+<script src="combat-tactics.js"></script>
+<script src="tactical-abilities.js"></script>
+<script src="support-role.js"></script>
+<script src="objectives.js"></script>
+<script src="maps.js"></script>
+<script src="lanes.js"></script>
+<script src="warfront.js"></script><script src="modular-gear.js"></script>
+<script src="spell-art.js"></script><script src="expansion.js"></script><script src="deathmatch.js"></script>
+<script src="desktop-controls.js"></script>
+<script src="tailnet-connect.js"></script>
+<script src="match-controls.js"></script>
+<script src="friendly-draft.js"></script><script src="potions.js"></script>
+<script src="combat-balance.js"></script><script src="multiplayer-rules.js"></script><script src="arena-update.js"></script><script src="gear-v3.js"></script><script src="gear-v4.js"></script><script src="gear-v5.js"></script><script src="relic-maze.js"></script><script src="balance-v6.js"></script><script src="gear-v5-visuals.js"></script><script src="arcana-art.js"></script><script src="wardrobe-atelier.js"></script><script src="arsenal-atelier.js"></script>
+<script src="visual-refinement.js"></script><script src="inventory.js"></script><script src="inventory-preparation.js"></script><script src="ready-builds.js"></script><script src="build-arsenal.js"></script><script src="lan-play.js"></script><script src="cloud-ui.js"></script><script src="multiplayer-ui.js"></script><script src="lobby-update.js"></script><script src="bot-lobby.js"></script><script src="relic-maze-ui.js"></script><script src="performance-v2.js"></script><script src="render-v3.js"></script><script src="desktop-performance-v4.js"></script><script src="mobile-terrain-cache.js"></script><script src="skill-descriptions-v7.js"></script><script src="android-controls.js"></script><script src="match-results.js"></script><script src="training-room.js"></script></body></html>
