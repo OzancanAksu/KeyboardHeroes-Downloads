@@ -99,8 +99,7 @@ assert.ok(run("weaponBook.greataxe.speed")>run("weaponBook.hammer.speed"),'Axe i
 assert.ok(run("weaponBook.hammer.hp")>run("weaponBook.greataxe.hp"),'Hammer has more HP and control');
 assert.ok(run("familyQ.holy[0].heal")>run("catalogWeaponQ.nature[0].heal"),'Holy has stronger burst healing');
 assert.ok(run("familyQ.holy[0].cd")>run("catalogWeaponQ.nature[0].cd"),'Nature heals more frequently');
-const axeProfile=run("balanceV6QRatio('greataxe',0)"),hammerProfile=run("balanceV6QRatio('hammer',0)");
-assert.ok(axeProfile>0&&axeProfile<=1&&hammerProfile>0&&hammerProfile<=1,'Weapon Q damage caps remain bounded');
+// Actual Q budget is validated by balance-v6.test.cjs, which loads the balance-v6 runtime.
 const garmentRecords=run("['head','armor','boots'].flatMap(key=>garments[key].slice(5).map((item,offset)=>({key,name:item.name,skills:extraSpells[key][offset]})))");
 const seenSignatures=new Map();
 let activeAbilities=0;
