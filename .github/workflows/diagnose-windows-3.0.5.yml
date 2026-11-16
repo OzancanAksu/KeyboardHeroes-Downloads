@@ -34,14 +34,14 @@ jobs:
             foreach($type in $asm.MainModule.Types){
               foreach($field in $type.Fields){
                 if($field.HasConstant -and $field.Constant -is [string] -and ($field.Name -match 'Version' -or $field.Constant -match '^\\d+\\.\\d+\\.\\d+$')){
-                  $matches.Add(('FIELD '+$type.FullName+'.'+$field.Name+' = '+$field.Constant))
+                  [void]$matches.Add([string]('FIELD '+$type.FullName+'.'+$field.Name+' = '+$field.Constant))
                 }
               }
               foreach($method in $type.Methods){
                 if(!$method.HasBody){continue}
                 foreach($ins in $method.Body.Instructions){
                   if($ins.OpCode.Code -eq [Mono.Cecil.Cil.Code]::Ldstr -and $ins.Operand -is [string] -and $ins.Operand -match '^\\d+\\.\\d+\\.\\d+$'){
-                    $matches.Add(('IL '+$type.FullName+'.'+$method.Name+' -> '+$ins.Operand))
+                    [void]$matches.Add([string]('IL '+$type.FullName+'.'+$method.Name+' -> '+$ins.Operand))
                   }
                 }
               }
