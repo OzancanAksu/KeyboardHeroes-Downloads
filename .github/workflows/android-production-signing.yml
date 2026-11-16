@@ -1,7 +1,7 @@
 name: Android Production APK — Persistent Signing Key
 on:
   push:
-    branches: [main]
+    branches: [main, release/android-v1.0.2-gear-terrain-20261116]
     paths:
       - 'android/app/**'
       - 'android/SIGNED_RELEASE_NOTES.md'
@@ -36,8 +36,8 @@ jobs:
           chmod 600 "$file"
           keytool -list -keystore "$file" -storetype PKCS12 -storepass "$KH_KEYSTORE_PASSWORD" -alias keyboardheroes >/dev/null
           echo "KH_ANDROID_KEYSTORE_PATH=$file" >> "$GITHUB_ENV"
-          echo "KH_ANDROID_VERSION_NAME=1.0.1" >> "$GITHUB_ENV"
-          echo "KH_ANDROID_VERSION_CODE=18" >> "$GITHUB_ENV"
+          echo "KH_ANDROID_VERSION_NAME=1.0.2" >> "$GITHUB_ENV"
+          echo "KH_ANDROID_VERSION_CODE=19" >> "$GITHUB_ENV"
       - name: Install Android SDK components
         shell: bash
         run: |
@@ -61,29 +61,30 @@ jobs:
           test -s "$source"
           "$ANDROID_HOME/build-tools/35.0.0/apksigner" verify --verbose --print-certs --min-sdk-version 26 "$source"
           "$ANDROID_HOME/build-tools/35.0.0/aapt" dump badging "$source" | tee /tmp/kh-production-badging.txt
-          grep -F "versionCode='18' versionName='1.0.1'" /tmp/kh-production-badging.txt
+          grep -F "versionCode='19' versionName='1.0.2'" /tmp/kh-production-badging.txt
           mkdir -p android-output
-          cp "$source" android-output/KeyboardHeroes-Android-v1.0.1.apk
+          cp "$source" android-output/KeyboardHeroes-Android-v1.0.2.apk
           (
             cd android-output
-            sha256sum KeyboardHeroes-Android-v1.0.1.apk > SHA256SUMS.txt
+            sha256sum KeyboardHeroes-Android-v1.0.2.apk > SHA256SUMS.txt
           )
       - uses: actions/upload-artifact@v4
         with:
-          name: KeyboardHeroes-Android-v1.0.1-Signed
+          name: KeyboardHeroes-Android-v1.0.2-Signed
           path: android-output/
       - name: Publish the one-time immutable signed APK release
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          if gh release view android-v1.0.1 >/dev/null 2>&1; then
-            echo "::error::android-v1.0.1 already exists. Refusing to overwrite a cryptographically signed public release."
+          if gh release view android-v1.0.2 >/dev/null 2>&1; then
+            echo "::error::android-v1.0.2 already exists. Refusing to overwrite a cryptographically signed public release."
             exit 1
           fi
-          gh release create android-v1.0.1 \
-            android-output/KeyboardHeroes-Android-v1.0.1.apk \
+          gh release create android-v1.0.2 \
+            android-output/KeyboardHeroes-Android-v1.0.2.apk \
             android-output/SHA256SUMS.txt \
-            --title 'Keyboard Heroes Android v1.0.1 — Permanently Signed APK' \
+            --title 'Keyboard Heroes Android v1.0.2 — Permanently Signed APK' \
             --notes-file android/SIGNED_RELEASE_NOTES.md --target main
