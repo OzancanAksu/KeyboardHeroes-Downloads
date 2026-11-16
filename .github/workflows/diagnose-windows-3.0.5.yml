@@ -1,0 +1,54 @@
+name: Diagnose Published 3.0.5 Launcher EXE
+on:
+  push:
+    paths:
+      - '.github/workflows/diagnose-windows-3.0.5.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-published-exe:
+    runs-on: windows-2022
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download and inspect immutable public release
+        shell: pwsh
+        run: |
+          $ErrorActionPreference='Stop'
+          $ProgressPreference='SilentlyContinue'
+          $url='https://github.com/OzancanAksu/KeyboardHeroes-Downloads/releases/download/v3.0.5/KeyboardHeroes-Desktop-v3.0.5.zip'
+          $zip=Join-Path $env:RUNNER_TEMP 'KeyboardHeroes-Desktop-v3.0.5.zip'
+          Invoke-WebRequest -Uri $url -OutFile $zip -TimeoutSec 120
+          $sha=(Get-FileHash -LiteralPath $zip -Algorithm SHA256).Hash.ToLowerInvariant()
+          if($sha -ne 'ebc1cdfda2bfe6abf54326ac7e5e5771b23b209e6a8b3e57ba5fd42c25783ad7'){throw 'Published ZIP changed or corrupt'}
+          Expand-Archive -LiteralPath $zip -DestinationPath (Join-Path $env:RUNNER_TEMP 'kh-expanded') -Force
+          $exe=Join-Path $env:RUNNER_TEMP 'kh-expanded/KeyboardHeroes.exe'
+          Write-Host ('Assembly header version: '+[Reflection.AssemblyName]::GetAssemblyName($exe).Version)
+          nuget install Mono.Cecil -Version 0.11.6 -OutputDirectory (Join-Path $env:RUNNER_TEMP 'nuget') -ExcludeVersion -NonInteractive | Out-Null
+          $dll=Join-Path $env:RUNNER_TEMP 'nuget/Mono.Cecil/lib/netstandard2.0/Mono.Cecil.dll'
+          Add-Type -Path $dll
+          $asm=[Mono.Cecil.AssemblyDefinition]::ReadAssembly($exe)
+          try{
+            $matches=New-Object System.Collections.Generic.List[string]
+            foreach($type in $asm.MainModule.Types){
+              foreach($field in $type.Fields){
+                if($field.HasConstant -and $field.Constant -is [string] -and ($field.Name -match 'Version' -or $field.Constant -match '^\\d+\\.\\d+\\.\\d+$')){
+                  $matches.Add(('FIELD '+$type.FullName+'.'+$field.Name+' = '+$field.Constant))
+                }
+              }
+              foreach($method in $type.Methods){
+                if(!$method.HasBody){continue}
+                foreach($ins in $method.Body.Instructions){
+                  if($ins.OpCode.Code -eq [Mono.Cecil.Cil.Code]::Ldstr -and $ins.Operand -is [string] -and $ins.Operand -match '^\\d+\\.\\d+\\.\\d+$'){
+                    $matches.Add(('IL '+$type.FullName+'.'+$method.Name+' -> '+$ins.Operand))
+                  }
+                }
+              }
+            }
+            $matches | ForEach-Object {Write-Host $_}
+            $old=@($matches | Where-Object {$_ -match '2\\.5\\.21'})
+            if($old.Count -gt 0){throw ('BUG FOUND: bundled v3.0.5 executable still has v2.5.21 native string/constant! '+($old -join ' / '))}
+            if(!($matches | Where-Object {$_ -match '3\\.0\\.5'})){throw 'No v3.0.5 native constant found'}
+            Write-Host 'PASS: no obsolete 2.5.21 native version constants in public release'
+          }finally{$asm.Dispose()}
