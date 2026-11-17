@@ -14,7 +14,7 @@ const setup=(weapon,option=0)=>{
  run(`phase='fight';paused=false;pillars.length=0;matchType='vs';clock=180;round=1;actors=[actor(0,0,0,'blade',true),actor(1,95,0,'blade',true),actor(1,125,10,'blade',true),actor(0,95,-25,'blade',true)];shots=[];zones=[];effects=[];floating=[];for(const a of actors){applyGear(a,{head:0,armor:0,boots:0,main:a.team===0?'sword':'sword',off:-1});a.invul=0;a.stun=0;a.control={mouse:{x:100,y:0},target:null,enemy:null};a.ai=999;}applyGear(actors[0],{head:0,armor:0,boots:0,main:${JSON.stringify(weapon)},off:-1});actors[0].loadout=[${option},0,0,0];actors[0].ai=999;actors[0].control={mouse:{x:95,y:0},target:null,enemy:null};`);
 };
 // Test real weapon timers in isolation from baseline AI attacks.
-const advance=(seconds)=>{for(let i=0;i<Math.round(seconds/.05);i++)run('kh308Step(.05)');};
+const advance=(seconds)=>{for(let i=0;i<Math.round(seconds/.05);i++)run('kh320Step(.05)');};
 
 for(const [id,hp] of [['feardagger',2000],['boxinggloves',2400]]){
  assert.equal(run('weaponBook.'+id+'.hands'),2);
