@@ -49,7 +49,7 @@ try{
  & $node legendary-308.test.cjs
  if($LASTEXITCODE -ne 0){throw 'Legendary weapons gameplay test FAILED'}
 }finally{Pop-Location}
-foreach($rel in @('dist/index.html','dist/home.html','dist/launcher.html')){
+foreach($rel in @('dist/home.html','dist/launcher.html','dist/version.js')){
  $s=[IO.File]::ReadAllText((Join-Path $stage $rel))
  if(!$s.Contains('3.0.8')){throw "Wrong v3.0.8 release identity: $rel"}
 }
