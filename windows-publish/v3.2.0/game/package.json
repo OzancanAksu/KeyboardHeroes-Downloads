@@ -1,0 +1,18 @@
+{
+  "name": "keyboardheroes-arena",
+  "version": "3.2.0",
+  "protocolVersion": "2.2.7",
+  "private": true,
+  "scripts": {
+    "start": "node server.cjs",
+    "test": "node leaderboard.test.cjs && node match-save-queue.test.cjs && node release-manifest.test.cjs && node portal.test.cjs && node i18n-dom.test.cjs && node i18n-catalog.test.cjs && node i18n.test.cjs && node bot-lobby.test.cjs && node lan-discovery.test.cjs && node lan-play.test.cjs && node ready-builds.test.cjs && node refinement.test.cjs && node potions.test.cjs && node potions-online.test.cjs && node deathmatch.test.cjs && node deathmatch-online.test.cjs && node expansion-rules.test.cjs && node expansion.test.cjs && node warfront.test.cjs && node lanes.test.cjs && node objectives.test.cjs && node objectives-online.test.cjs && node test.cjs && node accessories.test.cjs && node feel.test.cjs && node weapons.test.cjs && node battle-scale.test.cjs && node weapon-identity.test.cjs && node targeting.test.cjs && node client.test.cjs && node version.test.cjs && node desktop-page.test.cjs && node lobby-timer.test.cjs && node match-controls.test.cjs && node support-role.test.cjs && node online.test.cjs && node support-online.test.cjs && node catalog-expansion.test.cjs && node weapon-variants.test.cjs && node movement-tactics.test.cjs && node tactical-abilities.test.cjs && node desktop-controls.test.cjs && node tailnet-connect.test.cjs && node legendary-308.test.cjs && node legendary-310.test.cjs && node fear-boxing-320.test.cjs",
+    "test:build-slots": "node build-slots.test.cjs && node build-arsenal-ui.test.cjs",
+    "test:gear-v4": "node gear-v4.test.cjs",
+    "test:relic-maze": "node relic-maze.test.cjs",
+    "test:gear-v3": "node weapon-variants.test.cjs && node gear-v3.test.cjs && node build-slots.test.cjs",
+    "test:multiplayer": "node multiplayer-rules.test.cjs && node multiplayer-online.test.cjs && node performance-2.1.test.cjs && node render.test.cjs"
+  },
+  "dependencies": {
+    "ws": "8.22.0"
+  }
+}
