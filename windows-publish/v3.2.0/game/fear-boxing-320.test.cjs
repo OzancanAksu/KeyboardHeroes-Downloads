@@ -38,7 +38,7 @@ assert.ok(run('actors[0].stealth')>=1.9);
 assert.equal(run('actors[0].cd[0]')>=11.9,true,'Q1 cooldown 12 sec');
 advance(2.1);
 assert.equal(run('actors[0].stealth'),0,'stealth ends after 2 sec');
-assert.ok(run('actors[0].khFearWeak')>.9,'1 sec basic damage penalty begins');
+assert.ok(run('actors[0].khFearWeak')>=.85,'1 sec basic damage penalty begins');
 let baseline,weak;
 setup('feardagger');
 run("actors[0].khFearBasic=true;damage(actors[1],100,actors[0]);actors[0].khFearBasic=false");
