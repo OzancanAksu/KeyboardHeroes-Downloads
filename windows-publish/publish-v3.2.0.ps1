@@ -48,7 +48,7 @@ Push-Location $stage
 try{
  & $node fear-boxing-320.test.cjs
  if($LASTEXITCODE -ne 0){throw 'v3.2.0 fear dagger and boxing glove gameplay/art regression FAILED'}
-}
+}finally{Pop-Location}
 foreach($rel in @('dist/home.html','dist/launcher.html','dist/version.js','dist/android-launcher.html')){
  $s=[IO.File]::ReadAllText((Join-Path $stage $rel))
  if(!$s.Contains('3.2.0')){throw "Wrong v3.2.0 release identity: $rel"}
