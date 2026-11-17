@@ -1,0 +1,73 @@
+name: Publish Keyboard Heroes Windows v3.2.0 — Fear Daggers and Boxing Gloves
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'windows-publish/v3.2.0/**'
+      - 'windows-publish/publish-v3.2.0.ps1'
+      - 'windows-publish/v3.2.0/game/desktop-launcher/KeyboardHeroesLauncher.cs'
+      - 'windows-publish/v3.2.0/game/desktop-launcher/KeyboardHeroesSetup.cs'
+      - 'windows-publish/v3.2.0/RELEASE-3.2.0.md'
+      - '.github/workflows/windows-unified-3.2.0.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'windows-publish/v3.2.0/**'
+      - 'windows-publish/publish-v3.2.0.ps1'
+      - '.github/workflows/windows-unified-3.2.0.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-test-and-publish:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate gameplay and render tests; compile fresh native Windows 3.2.0
+        shell: pwsh
+        run: .\windows-publish\publish-v3.2.0.ps1
+      - name: Publish immutable public Windows v3.2.0 release after ALL tests pass
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference='Stop'
+          gh release view v3.2.0 --repo OzancanAksu/KeyboardHeroes-Downloads 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            $existing=gh release view v3.2.0 --repo OzancanAksu/KeyboardHeroes-Downloads --json assets | ConvertFrom-Json
+            $names=@($existing.assets | ForEach-Object { $_.name })
+            foreach ($name in @('KeyboardHeroesSetup.exe','KeyboardHeroes-Desktop-v3.2.0.zip')) {
+              if ($names -notcontains $name) { throw "Release exists but is missing $name; refusing to overwrite a pinned release." }
+            }
+            Write-Host 'Existing v3.2.0 kept immutable'
+          } else {
+            gh release create v3.2.0 KeyboardHeroesSetup.exe updates/KeyboardHeroes-Desktop-v3.2.0.zip --title "Keyboard Heroes Windows v3.2.0 — Fear Daggers and Boxing Gloves" --notes-file windows-publish/v3.2.0/RELEASE-3.2.0.md --repo OzancanAksu/KeyboardHeroes-Downloads --target main
+            if ($LASTEXITCODE -ne 0) { throw 'Windows 3.2.0 publication failed' }
+          }
+      - name: Verify publicly published release matches local checksums
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference='Stop'
+          $release=gh api repos/OzancanAksu/KeyboardHeroes-Downloads/releases/tags/v3.2.0 | ConvertFrom-Json
+          if ($LASTEXITCODE -ne 0) { throw 'Public release metadata unreadable' }
+          foreach ($name in @('KeyboardHeroesSetup.exe','KeyboardHeroes-Desktop-v3.2.0.zip')) {
+            $asset=@($release.assets | Where-Object { $_.name -eq $name }) | Select-Object -First 1
+            if (!$asset -or $asset.digest -notmatch '^sha256:[0-9a-fA-F]{64}$' -or $asset.size -lt 2000000) { throw "Missing or invalid asset: $name" }
+            $expected=$asset.digest.Substring(7).ToUpperInvariant()
+            $local=if($name -eq 'KeyboardHeroesSetup.exe'){$name}else{'updates/'+$name}
+            if ((Get-FileHash -LiteralPath $local -Algorithm SHA256).Hash -ne $expected) { throw "Local binary differs from published asset: $name" }
+            Write-Host "PASS published Windows $name size=$($asset.size) SHA-256=$expected"
+          }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: KeyboardHeroes-Windows-v3.2.0-Candidate
+          path: |
+            KeyboardHeroesSetup.exe
+            updates/KeyboardHeroes-Desktop-v3.2.0.zip
+          retention-days: 7
