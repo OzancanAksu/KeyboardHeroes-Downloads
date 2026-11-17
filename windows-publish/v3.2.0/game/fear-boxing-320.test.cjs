@@ -66,7 +66,7 @@ assert.ok(Math.abs(run('actors[0].x')-14)<.01,'movement bonus exactly +40%');
 advance(3.1);
 assert.equal(run('actors[0].khFearFrenzy'),0,'frenzy expires at 3 seconds');
 setup('boxinggloves',0);
-run("actors[2].x=-70;actors[2].y=0;actors[3].x=80;actors[3].y=-20");
+run("actors[1].x=70;actors[1].y=0;actors[2].x=-70;actors[2].y=0;actors[3].x=80;actors[3].y=-20");
 const enemyFront=run('actors[1].hp'),enemyBack=run('actors[2].hp'),ally=run('actors[3].hp');
 assert.equal(run('cast(actors[0],0,{x:140,y:0})'),true);
 advance(.44);
